@@ -44,6 +44,7 @@ public class RecyclerViewAdapter
 
     private static final String TAG = RecyclerViewAdapter.class.getSimpleName();
 
+    private Context context;
     private List<Wallpaper> wallpaperList;
     private WallpaperData wallpaperData;
 
@@ -69,7 +70,8 @@ public class RecyclerViewAdapter
         }
     }
 
-    public RecyclerViewAdapter(List<Wallpaper> wallpaperList, WallpaperData wallpaperData) {
+    public RecyclerViewAdapter(Context context, List<Wallpaper> wallpaperList, WallpaperData wallpaperData) {
+        this.context = context;
         this.wallpaperList = wallpaperList;
         this.wallpaperData = wallpaperData;
     }
@@ -133,6 +135,11 @@ public class RecyclerViewAdapter
 
     @Override
     public boolean onItemDismiss(int position) {
+
+        Log.d(TAG, "onItemDismiss");
+
+        wallpaperData.deleteWallpaper(context, wallpaperList.get(position));
+
         wallpaperList.remove(position);
         notifyItemRemoved(position);
 

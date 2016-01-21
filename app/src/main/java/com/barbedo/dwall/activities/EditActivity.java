@@ -35,7 +35,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.barbedo.dwall.R;
+import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
+import com.barbedo.dwall.data.WallpaperData;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,6 +55,8 @@ public class EditActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private String selectedImagePath;
 
+    private DWallApplication dWallApplication;
+    private WallpaperData wallpaperData;
     private Wallpaper wallpaper;
     private ImageView preview;
     private Button okButton;
@@ -70,6 +74,8 @@ public class EditActivity extends AppCompatActivity {
         nameEdit = (EditText) findViewById(R.id.name_edit);
 
         wallpaper = new Wallpaper();
+        dWallApplication = (DWallApplication) getApplication();
+        wallpaperData = dWallApplication.getWallpaperData();
 
         Intent intent = getIntent();
         wallpaper.setPosition(intent.getIntExtra(ListActivity.EXTRA_POSITION, DEFAULT_POSITION));
@@ -99,7 +105,9 @@ public class EditActivity extends AppCompatActivity {
             Log.d(TAG, wallpaper.toString());
 
             // TMP: Delete the saved image and created thumbnail
-            deleteFiles();
+            // deleteFiles();
+
+            wallpaperData.insertWallpaper(wallpaper);
 
             Intent intent = new Intent(this, ListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -110,7 +118,7 @@ public class EditActivity extends AppCompatActivity {
     public void launchGallery(View v) {
 
         // Delete files from last selection
-        deleteFiles();
+        wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
 
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -174,12 +182,12 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteFiles() {
-        if (deleteFile(wallpaper.getFilename()) &&
-                deleteFile(wallpaper.getFilename() + "_th" )) {
-            Log.d(TAG, "Files deleted");
-        } else {
-            Log.d(TAG, "No file found");
-        }
-    }
+//    private void deleteFiles() {
+//        if (deleteFile(wallpaper.getFilename()) &&
+//                deleteFile(wallpaper.getFilename() + "_th" )) {
+//            Log.d(TAG, "Files deleted");
+//        } else {
+//            Log.d(TAG, "No file found");
+//        }
+//    }
 }

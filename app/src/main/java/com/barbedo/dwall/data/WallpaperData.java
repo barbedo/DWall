@@ -175,4 +175,16 @@ public class WallpaperData {
         db.close();
         return wallpaperList;
     }
+
+    /**
+     * @param wallpaper Deletes the wallpaper file and its thumbnail
+     */
+    public void deleteWallpaper(Context context, Wallpaper wallpaper) {
+        if (context.deleteFile(wallpaper.getFilename()) &&
+                context.deleteFile(wallpaper.getFilename() + "_th")) {
+            Log.d(TAG, "Files deleted");
+        } else {
+            Log.d(TAG, "No file found");
+        }
+    }
 }

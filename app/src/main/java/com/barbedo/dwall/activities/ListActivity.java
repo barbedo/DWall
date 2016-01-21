@@ -65,7 +65,7 @@ public class ListActivity extends AppCompatActivity {
 
         // RecyclerView initialization
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
-        adapter = new RecyclerViewAdapter(wallpaperList, wallpaperData);
+        adapter = new RecyclerViewAdapter(getApplicationContext(), wallpaperList, wallpaperData);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         rv.setAdapter(adapter);
@@ -80,7 +80,6 @@ public class ListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Launch mode selection activity
                 Intent intent = new Intent(ListActivity.this, EditActivity.class);
                 intent.putExtra(EXTRA_POSITION, wallpaperList.size());
                 startActivity(intent);
