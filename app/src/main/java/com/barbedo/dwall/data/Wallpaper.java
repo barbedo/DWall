@@ -26,7 +26,15 @@ public class Wallpaper {
     String info;
     String filename;
 
-    Wallpaper(int position, String name, String mode, String info, String filename) {
+    public Wallpaper() {
+        this.position = 0;
+        this.name = "";
+        this.mode = "";
+        this.info = "";
+        this.filename = "";
+    };
+
+    public Wallpaper(int position, String name, String mode, String info, String filename) {
         this.position = position;
         this.name = name;
         this.mode = mode;

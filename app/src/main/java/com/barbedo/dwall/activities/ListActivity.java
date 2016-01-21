@@ -16,6 +16,7 @@
 
 package com.barbedo.dwall.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -41,6 +42,7 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
 
     private static final String TAG = "ListActivity";
+    public static final String EXTRA_POSITION = "com.barbedo.dwall.EXTRA_POSITION";
 
     private DWallApplication dWallApplication;
     private WallpaperData wallpaperData;
@@ -79,6 +81,9 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: Launch mode selection activity
+                Intent intent = new Intent(ListActivity.this, EditActivity.class);
+                intent.putExtra(EXTRA_POSITION, wallpaperList.size());
+                startActivity(intent);
             }
         });
 
