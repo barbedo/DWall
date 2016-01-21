@@ -19,22 +19,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/preview"
-        android:id="@+id/name_edit" />
+        android:id="@+id/name_edit"
+        android:maxLines="1"
+        android:hint="Name"
+        android:singleLine="true"
+        android:maxLength="30"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mode_text"
+        android:text="Mode: "
+        android:layout_toEndOf="@id/preview"
+        android:layout_alignTop="@+id/mode_spinner" />
+
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_below="@+id/name_edit"
-        android:layout_toEndOf="@id/preview"
-        android:layout_marginTop="37dp" />
+        android:id="@+id/mode_spinner"
+        android:overlapAnchor="false"
+        android:layout_below="@id/name_edit"
+        android:layout_toEndOf="@id/mode_text"
+        />
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change image"
         android:id="@+id/image_button"
-        android:layout_below="@id/spinner"
+        android:layout_below="@id/mode_spinner"
         android:layout_toEndOf="@id/preview" />
 
     <Button

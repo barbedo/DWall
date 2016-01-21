@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">D-Wall</string>
     <string name="action_settings">Settings</string>
+    
+    <string-array name="spinner_text">
+        <item>Wi-Fi</item>
+        <item>Time</item>
+    </string-array>
 </resources>
