@@ -96,6 +96,8 @@ public class EditActivity extends AppCompatActivity {
             wallpaper.setName(name);
             wallpaper.setMode(spinner.getSelectedItem().toString());
 
+            Log.d(TAG, wallpaper.toString());
+
             // TMP: Delete the saved image and created thumbnail
             deleteFiles();
 

@@ -87,5 +87,8 @@ public class Wallpaper {
         this.filename = filename;
     }
 
+    public String toString() {
+        return position + " " + name + " " + mode + " " + info + " " + filename;
+    }
 
 }
