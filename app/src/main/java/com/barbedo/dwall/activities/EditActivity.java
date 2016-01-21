@@ -23,11 +23,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -52,6 +55,9 @@ public class EditActivity extends AppCompatActivity {
 
     private Wallpaper wallpaper;
     private ImageView preview;
+    private Button okButton;
+    private EditText nameEdit;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,9 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         preview = (ImageView) findViewById(R.id.preview);
+        okButton = (Button) findViewById(R.id.ok_button);
+        okButton.setEnabled(false);
+        nameEdit = (EditText) findViewById(R.id.name_edit);
 
         wallpaper = new Wallpaper();
 
@@ -66,7 +75,7 @@ public class EditActivity extends AppCompatActivity {
         wallpaper.setPosition(intent.getIntExtra(ListActivity.EXTRA_POSITION, DEFAULT_POSITION));
 
         // Populate spinner
-        Spinner spinner = (Spinner) findViewById(R.id.mode_spinner);
+        spinner = (Spinner) findViewById(R.id.mode_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_text, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -77,16 +86,23 @@ public class EditActivity extends AppCompatActivity {
 
     public void registerWallpaper(View v) {
 
-        // TODO: Disable the button while the wallpaper isn't good
-        // button.setEnabled(false);
-        // TODO: Save the wallpaper to the
+        String name = nameEdit.getText().toString();
 
-        // TMP: Delete the saved image and created thumbnail
-        deleteFiles();
+        if (name.equals("")) {
+            Snackbar.make(v, "Please, select a name.", Snackbar.LENGTH_SHORT)
+                    .show();
+        } else {
 
-        Intent intent = new Intent(this, ListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+            wallpaper.setName(name);
+            wallpaper.setMode(spinner.getSelectedItem().toString());
+
+            // TMP: Delete the saved image and created thumbnail
+            deleteFiles();
+
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     public void launchGallery(View v) {
@@ -148,6 +164,9 @@ public class EditActivity extends AppCompatActivity {
                     createFromPath(getFileStreamPath(filename + "_th").getAbsolutePath()));
 
             wallpaper.setFilename(filename);
+
+            // Enable bundle
+            okButton.setEnabled(true);
 
             Log.d(TAG, "Wallpaper filename: " + filename);
         }
