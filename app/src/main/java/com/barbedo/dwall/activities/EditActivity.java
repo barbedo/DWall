@@ -117,9 +117,6 @@ public class EditActivity extends AppCompatActivity {
 
     public void launchGallery(View v) {
 
-        // Delete files from last selection
-        wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
-
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -129,6 +126,9 @@ public class EditActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE) {
+
+            // Delete files from last selection
+            wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
 
             // Retrieves URI
             Uri uri = data.getData();
