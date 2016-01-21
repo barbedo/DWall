@@ -50,7 +50,8 @@
         android:text="Change image"
         android:id="@+id/image_button"
         android:layout_below="@id/mode_spinner"
-        android:layout_toEndOf="@id/preview" />
+        android:layout_toEndOf="@id/preview"
+        android:onClick="launchGallery" />
 
     <Button
         android:layout_width="wrap_content"

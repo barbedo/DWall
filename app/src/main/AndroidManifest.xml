@@ -19,7 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditActivity"></activity>
+        <activity
+            android:name=".activities.EditActivity"
+            android:parentActivityName=".activities.ListActivity">
+        </activity>
     </application>
 
 </manifest>

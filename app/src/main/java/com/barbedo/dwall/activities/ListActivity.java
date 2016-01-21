@@ -87,6 +87,6 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        Log.d(TAG, "onCreated");
+        Log.d(TAG, "onCreate");
     }
 }
