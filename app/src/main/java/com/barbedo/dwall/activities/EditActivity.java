@@ -85,6 +85,7 @@ public class EditActivity extends AppCompatActivity {
         deleteFiles();
 
         Intent intent = new Intent(this, ListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
