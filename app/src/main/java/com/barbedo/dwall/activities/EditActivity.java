@@ -109,8 +109,8 @@ public class EditActivity extends AppCompatActivity
         // Populate spinner
         spinner = (Spinner) findViewById(R.id.mode_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_text, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.spinner_text, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
 

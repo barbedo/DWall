@@ -10,10 +10,11 @@
     tools:context="com.barbedo.dwall.activities.EditActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="285dp"
         android:id="@+id/preview"
-        android:src="@drawable/blank"/>
+        android:src="@drawable/blank"
+        android:padding="10dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -23,15 +24,20 @@
         android:maxLines="1"
         android:hint="Name"
         android:singleLine="true"
-        android:maxLength="30"/>
+        android:maxLength="30"
+        android:paddingTop="30dp"
+        android:textSize="26sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mode_text"
         android:text="Mode: "
-        android:layout_toEndOf="@id/preview"
-        android:layout_alignTop="@+id/mode_spinner" />
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_alignTop="@+id/mode_spinner"
+        android:layout_toEndOf="@+id/preview"
+        android:layout_alignBottom="@+id/mode_spinner" />
 
 
     <Spinner
@@ -39,28 +45,30 @@
         android:layout_height="wrap_content"
         android:id="@+id/mode_spinner"
         android:overlapAnchor="false"
-        android:layout_below="@id/name_edit"
-        android:layout_toEndOf="@id/mode_text"
-        />
+        android:layout_above="@+id/preview_button"
+        android:layout_toEndOf="@+id/mode_text"
+        android:layout_marginBottom="50dp" />
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Change image"
         android:id="@+id/preview_button"
-        android:layout_below="@id/mode_spinner"
-        android:layout_toEndOf="@id/preview"
-        android:onClick="launchGallery" />
+        android:onClick="launchGallery"
+        android:layout_alignBottom="@+id/preview"
+        android:layout_alignEnd="@+id/mode_spinner"
+        android:layout_toEndOf="@id/preview"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/ok_button"
+        android:onClick="registerWallpaper"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="registerWallpaper" />
+        android:layout_marginBottom="50dp" />
 
 
 </RelativeLayout>
