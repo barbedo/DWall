@@ -118,9 +118,9 @@ public class WallpaperData {
             Log.d(TAG, "Added wallpaper " + wallpaper.name);
         } catch (SQLException e) {
             Log.d(TAG, "SQLException");
-        } finally {
-            db.close();
         }
+
+        db.close();
     }
 
 
