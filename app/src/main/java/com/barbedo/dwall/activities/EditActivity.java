@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,14 +39,18 @@ import com.barbedo.dwall.R;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
+import com.barbedo.dwall.fragments.TimePickerFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements TimePickerFragment.OnTimeSetListener {
 
     private final String TAG = "EditActivity";
+
+    public static final int START_TIME_PICKER = 1;
+    public static final int END_TIME_PICKER = 2;
 
     private final int DEFAULT_POSITION = 0;
     private static final int THUMB_WIDTH = 108;
@@ -182,6 +187,18 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+
+    public void onTimeSelected(int id, int hourOfDay, int minute) {
+        switch (id) {
+            case START_TIME_PICKER:
+                DialogFragment newFragment = TimePickerFragment.newInstance(END_TIME_PICKER);
+                newFragment.show(getSupportFragmentManager(), "timePicker");
+                break;
+            case END_TIME_PICKER:
+                break;
+        }
+    }
+}
 //    private void deleteFiles() {
 //        if (deleteFile(wallpaper.getFilename()) &&
 //                deleteFile(wallpaper.getFilename() + "_th" )) {
@@ -190,4 +207,4 @@ public class EditActivity extends AppCompatActivity {
 //            Log.d(TAG, "No file found");
 //        }
 //    }
-}
+
