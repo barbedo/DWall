@@ -269,12 +269,26 @@ public class EditActivity extends AppCompatActivity
 
 
     /**
-     * Spinner listener callback when the user touches outside of the dropdown menu
+     * Spinner listener callback when the user touches outside of the dropdown menu.
      *
-     * @param parent
+     * @param parent List of the spinner items.
      */
     public void onNothingSelected(AdapterView<?> parent) {
         // Ignore
+    }
+
+    /**
+     * Called when the back button is pressed.
+     * If a wallpaper has been selected, its file must be deleted before returning to the List
+     * Activity.
+     */
+    @Override
+    public void onBackPressed() {
+
+        // Delete wallpaper if it was selected before going back
+        wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+
+        super.onBackPressed();
     }
 }
 
