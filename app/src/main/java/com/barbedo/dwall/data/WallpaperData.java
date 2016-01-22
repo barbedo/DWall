@@ -99,7 +99,7 @@ public class WallpaperData {
 
 
     /**
-     * Inserts the specified wallpaper object at the end of the database
+     * Inserts the specified wallpaper object at the end of the database.
      *
      * @param wallpaper The desired wallpaper
      */

@@ -45,6 +45,7 @@ import com.barbedo.dwall.fragments.TimePickerFragment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Selects the wallpaper and configures its properties.
@@ -72,10 +73,12 @@ public class EditActivity extends AppCompatActivity
     private static final int SELECT_PICTURE = 100;
 
     private String selectedImagePath;
+    private int position;
 
     private DWallApplication dWallApplication;
     private WallpaperData wallpaperData;
     private Wallpaper wallpaper;
+    private List<Wallpaper> wallpaperList;
     private ImageView preview;
     private Button okButton;
     private EditText nameEdit;
@@ -100,12 +103,6 @@ public class EditActivity extends AppCompatActivity
         dWallApplication = (DWallApplication) getApplication();
         wallpaperData = dWallApplication.getWallpaperData();
 
-        // Gets desired position from the intent
-        Intent intent = getIntent();
-        wallpaper.setPosition(intent.getIntExtra(ListActivity.EXTRA_POSITION, DEFAULT_POSITION));
-
-        // TODO: Check the database to see if the wallpaper at the specified position already exists
-
         // Populate spinner
         spinner = (Spinner) findViewById(R.id.mode_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -113,6 +110,37 @@ public class EditActivity extends AppCompatActivity
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
+
+
+        // Gets desired position from the intent
+        Intent intent = getIntent();
+        position = intent.getIntExtra(ListActivity.EXTRA_POSITION, DEFAULT_POSITION);
+        wallpaper.setPosition(position);
+
+        // Check the database to see if the wallpaper at the specified position already exists
+        wallpaperList = wallpaperData.getWallpaperList();
+        Log.d(TAG, "WallpaperList size:  " + String.valueOf(wallpaperList.size()));
+        if (wallpaperList.size()  > position) {
+            nameEdit.setText(wallpaperList.get(position).getName());
+            preview.setImageDrawable(Drawable.
+                    createFromPath(getFileStreamPath(wallpaperList.get(position).
+                            getFilename() + "_th").getAbsolutePath()));
+            wallpaper.setFilename(wallpaperList.get(position).getFilename());
+
+            switch (wallpaperList.get(position).getMode()) {
+                case "Wi-Fi":
+                    spinner.setSelection(1);
+                    break;
+                case "Time":
+                    spinner.setSelection(2);
+                    break;
+                default:
+                    break;
+            }
+
+            okButton.setEnabled(true);
+        }
+
 
         Log.d(TAG, "onCreate");
     }
@@ -133,7 +161,7 @@ public class EditActivity extends AppCompatActivity
             Snackbar.make(v, "Please, select a mode.", Snackbar.LENGTH_SHORT)
                     .show();
         } else {
-            // Commit the selected wallpaper to the database
+            // Commits the selected wallpaper to the database
             wallpaper.setName(name);
             wallpaper.setMode(spinner.getSelectedItem().toString());
             wallpaperData.insertWallpaper(wallpaper);
@@ -286,9 +314,18 @@ public class EditActivity extends AppCompatActivity
     public void onBackPressed() {
 
         // Delete wallpaper if it was selected before going back
-        wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+        // If the the user is editing an already saved wallpaper, it is not deleted
+        if (wallpaperList.size() > position) {
+            if (!wallpaperList.get(position).getFilename()
+                    .equals(wallpaper.getFilename())) {
 
-        super.onBackPressed();
+                wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+            }
+            super.onBackPressed();
+        } else {
+            wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+            super.onBackPressed();
+        }
     }
 }
 

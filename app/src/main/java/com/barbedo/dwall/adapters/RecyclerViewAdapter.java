@@ -18,6 +18,7 @@ package com.barbedo.dwall.adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.barbedo.dwall.R;
+import com.barbedo.dwall.activities.EditActivity;
 import com.barbedo.dwall.activities.ListActivity;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
@@ -157,7 +159,10 @@ public class RecyclerViewAdapter
                 // Retrieves the View Holder reference using the button tag
                 WallpaperViewHolder viewHolder = (WallpaperViewHolder) v.getTag();
                 int position = viewHolder.getAdapterPosition();
-                Toast.makeText(v.getContext(), "edit " + position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), EditActivity.class);
+                intent.putExtra(ListActivity.EXTRA_POSITION, position);
+                v.getContext().startActivity(intent);
+                //Toast.makeText(v.getContext(), "edit " + position, Toast.LENGTH_SHORT).show();
             }
         });
     }
