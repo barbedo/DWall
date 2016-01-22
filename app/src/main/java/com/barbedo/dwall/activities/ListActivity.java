@@ -92,9 +92,16 @@ public class ListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ListActivity.this, EditActivity.class);
-                intent.putExtra(EXTRA_POSITION, wallpaperList.size());
-                startActivity(intent);
+
+                if (wallpaperList.size() < 5) {
+                    Intent intent = new Intent(ListActivity.this, EditActivity.class);
+                    intent.putExtra(EXTRA_POSITION, wallpaperList.size());
+                    startActivity(intent);
+                } else {
+                    Snackbar.make(view, "Maximum number of wallpapers reached.",
+                            Snackbar.LENGTH_LONG).show();
+                }
+
             }
         });
 
