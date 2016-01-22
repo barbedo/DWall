@@ -28,6 +28,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,7 +61,8 @@ import java.util.List;
  * @author Ricardo Barbedo
  */
 public class EditActivity extends AppCompatActivity
-        implements TimePickerFragment.OnTimeSetListener, AdapterView.OnItemSelectedListener {
+        implements TimePickerFragment.OnTimeSetListener, AdapterView.OnItemSelectedListener,
+                    View.OnTouchListener {
 
     private final String TAG = "EditActivity";
 
@@ -74,6 +76,8 @@ public class EditActivity extends AppCompatActivity
 
     private String selectedImagePath;
     private int position;
+    private String info;
+    private boolean userSelect;
 
     private DWallApplication dWallApplication;
     private WallpaperData wallpaperData;
@@ -103,14 +107,15 @@ public class EditActivity extends AppCompatActivity
         dWallApplication = (DWallApplication) getApplication();
         wallpaperData = dWallApplication.getWallpaperData();
 
-        // Populate spinner
+        // Populates spinner
         spinner = (Spinner) findViewById(R.id.mode_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_text, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
-
+        spinner.setOnItemSelectedListener(this);
+        // Used to discern if the spinner was changed programmatically or by the user
+        spinner.setOnTouchListener(this);
 
         // Gets desired position from the intent
         Intent intent = getIntent();
@@ -121,13 +126,17 @@ public class EditActivity extends AppCompatActivity
         wallpaperList = wallpaperData.getWallpaperList();
         Log.d(TAG, "WallpaperList size:  " + String.valueOf(wallpaperList.size()));
         if (wallpaperList.size()  > position) {
-            nameEdit.setText(wallpaperList.get(position).getName());
-            preview.setImageDrawable(Drawable.
-                    createFromPath(getFileStreamPath(wallpaperList.get(position).
-                            getFilename() + "_th").getAbsolutePath()));
-            wallpaper.setFilename(wallpaperList.get(position).getFilename());
 
-            switch (wallpaperList.get(position).getMode()) {
+            Wallpaper lastWallpaper = wallpaperList.get(position);
+
+            nameEdit.setText(lastWallpaper.getName());
+            preview.setImageDrawable(Drawable.
+                    createFromPath(getFileStreamPath(lastWallpaper.
+                            getFilename() + "_th").getAbsolutePath()));
+            wallpaper.setFilename(lastWallpaper.getFilename());
+            wallpaper.setInfo(lastWallpaper.getInfo());
+
+            switch (lastWallpaper.getMode()) {
                 case "Wi-Fi":
                     spinner.setSelection(1);
                     break;
@@ -140,7 +149,6 @@ public class EditActivity extends AppCompatActivity
 
             okButton.setEnabled(true);
         }
-
 
         Log.d(TAG, "onCreate");
     }
@@ -269,12 +277,31 @@ public class EditActivity extends AppCompatActivity
             case START_TIME_PICKER:
                 DialogFragment newFragment = TimePickerFragment.newInstance(END_TIME_PICKER);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
+                info = String.format("%2d %2d ", hourOfDay, minute);
                 break;
 
             // Saves the end time info
             case END_TIME_PICKER:
+                info = info + String.format("%2d %2d", hourOfDay, minute);
+                wallpaper.setInfo(info);
                 break;
         }
+    }
+
+
+    /**
+     * Called when a touch event is detected for the view.
+     * This is used to decide if the change in the spinner is caused by the user or done
+     * programmatically.
+     *
+     * @param v      The view the touch event has been dispatched to.
+     * @param event  The MotionEvent object containing full information about the event.
+     * @return       True if the listener has consumed the event, false otherwise.
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        userSelect = true;
+        return false;
     }
 
     /**
@@ -285,13 +312,16 @@ public class EditActivity extends AppCompatActivity
      * @param pos    Position of the selected item.
      * @param id     Row id of the selected item.
      */
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
 
         // Launch the time picker if the time mode is selected from the menu
-        if (parent.getItemAtPosition(pos).toString().equals("Time")) {
+        if (parent.getItemAtPosition(pos).toString().equals("Time")
+                && userSelect) {
             DialogFragment newFragment = TimePickerFragment.newInstance(START_TIME_PICKER);
             newFragment.show(getSupportFragmentManager(), "timePicker");
+            userSelect = false;
         }
     }
 
@@ -301,6 +331,7 @@ public class EditActivity extends AppCompatActivity
      *
      * @param parent List of the spinner items.
      */
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Ignore
     }
