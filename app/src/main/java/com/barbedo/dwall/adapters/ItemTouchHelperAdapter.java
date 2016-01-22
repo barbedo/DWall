@@ -17,9 +17,26 @@
 package com.barbedo.dwall.adapters;
 
 /**
- * Listens for the callback
+ * Listens for the callback of the ItemTouchHelper.
+ *
+ * @author Ricardo Barbedo
  */
 public interface ItemTouchHelperAdapter {
+
+    /**
+     * Called every time the item is shifted.
+     *
+     * @param fromPosition previous position of the selected card
+     * @param toPosition   new position of the selected card
+     * @return             true if item was moved
+     */
     boolean onItemMove(int fromPosition, int toPosition);
+
+    /**
+     * Called every time the item is dismissed with a swipe.
+     *
+     * @param position position of the dismissed card
+     * @return         true if item was dismissed
+     */
     boolean onItemDismiss(int position);
 }

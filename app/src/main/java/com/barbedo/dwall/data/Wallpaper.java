@@ -17,7 +17,9 @@
 package com.barbedo.dwall.data;
 
 /**
- * Representation of the Wallpaper data
+ * Representation of the Wallpaper data.
+ *
+ * @author Ricardo Barbedo
  */
 public class Wallpaper {
     int position;
@@ -26,6 +28,9 @@ public class Wallpaper {
     String info;
     String filename;
 
+    /**
+     * Default constructor with empty fields and position 0.
+     */
     public Wallpaper() {
         this.position = 0;
         this.name = "";
@@ -34,6 +39,15 @@ public class Wallpaper {
         this.filename = "";
     };
 
+    /**
+     * Constructor with the specified members.
+     *
+     * @param position Position on the list and on the database.
+     * @param name     Name selected by the user.
+     * @param mode     Mode selected by the user.
+     * @param info     Information related to the selected mode.
+     * @param filename Name of the corresponding wallpaper saved in the internal storage.
+     */
     public Wallpaper(int position, String name, String mode, String info, String filename) {
         this.position = position;
         this.name = name;
@@ -41,7 +55,6 @@ public class Wallpaper {
         this.info = info;
         this.filename = filename;
     }
-
 
     public int getPosition() {
         return position;

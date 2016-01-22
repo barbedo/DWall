@@ -20,26 +20,51 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 /**
- * Configures and enables the
+ * This class configures the ItemTouchHelper that enables gestures on the RecyclerView list.
+ *
+ * @author  Ricardo Barbedo
  */
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter adapter;
 
+    /**
+     * Constructor.
+     * Recovers the RecyclerViewAdapter that it is going to listen.
+     *
+     * @param adapter The RecyclerViewAdapter used.
+     */
     public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         this.adapter = adapter;
     }
 
+    /**
+     * Sets the configuration for the long press drag.
+     *
+     * @return True if long press drag is enabled and false otherwise
+     */
     @Override
     public boolean isLongPressDragEnabled() {
         return true;
     }
 
+    /**
+     * Sets the configuration for the swipe gesture.
+     *
+     * @return True if the swipe gesture is enabled and false otherwise.
+     */
     @Override
     public boolean isItemViewSwipeEnabled() {
         return true;
     }
 
+    /**
+     * Configures the allowed movements.
+     *
+     * @param recyclerView RecyclerView that contains the view that was moved.
+     * @param viewHolder   Holder of the view that was moved.
+     * @return             Flags that configure the helper.
+     */
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
@@ -47,6 +72,16 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
+    /**
+     * Called when the item is moved with a long press drag.
+     * Called each time the position changes not only on the finger release. Calls the
+     * adapter method.
+     *
+     * @param recyclerView RecyclerView that contains the view that was moved.
+     * @param viewHolder   Holder of the view that was moved.
+     * @param target       Holder of the new position of the view.
+     * @return             Flags that configure the helper.
+     */
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                           RecyclerView.ViewHolder target) {
@@ -54,6 +89,12 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return true;
     }
 
+    /**
+     * Called when the item is swiped. Calls the adapter method.
+     *
+     * @param viewHolder Holder of the view that was swiped.
+     * @param direction  Direction of the swipe.
+     */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         adapter.onItemDismiss(viewHolder.getAdapterPosition());

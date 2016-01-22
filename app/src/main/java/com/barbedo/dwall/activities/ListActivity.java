@@ -39,17 +39,29 @@ import com.barbedo.dwall.data.WallpaperData;
 
 import java.util.List;
 
+
+/**
+ * Main activity containing the wallpaper list.
+ *
+ * The items are represented as a list of wallpaper objects in the activity and as rows a SQLite
+ * database. When an item is edited or deleted, the database will be properly updated.
+ *
+ * The list is displayed with the help of the RecyclerView, which is the standard way to create
+ * lists according to the Material Design guidelines. The drag and swipe interactions and its
+ * animations are managed by the ItemTouchHelper class.
+ *
+ * @author Ricardo Barbedo
+ */
 public class ListActivity extends AppCompatActivity {
 
+    // Constants
     private static final String TAG = "ListActivity";
     public static final String EXTRA_POSITION = "com.barbedo.dwall.EXTRA_POSITION";
 
     private DWallApplication dWallApplication;
     private WallpaperData wallpaperData;
-
     private List<Wallpaper> wallpaperList;
     private RecyclerViewAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

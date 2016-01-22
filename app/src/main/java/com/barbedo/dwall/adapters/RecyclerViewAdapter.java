@@ -38,6 +38,13 @@ import com.barbedo.dwall.data.WallpaperData;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class defines the adapter of the RecycleView, which is preferred over the use of a ListView
+ * for lists of programs following the Material Design guideline. The ItemTouchHelper implementation
+ * offers an easy way to handle gestures and animations when changing the list.
+ *
+ * @author Ricardo Barbedo
+ */
 public class RecyclerViewAdapter
         extends RecyclerView.Adapter<RecyclerViewAdapter.WallpaperViewHolder>
         implements ItemTouchHelperAdapter {
@@ -48,6 +55,10 @@ public class RecyclerViewAdapter
     private List<Wallpaper> wallpaperList;
     private WallpaperData wallpaperData;
 
+    /**
+     * This class defines the ViewHolder containing all the information of the card that represents
+     * the wallpaper
+     */
     public static class WallpaperViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView name;
@@ -56,6 +67,11 @@ public class RecyclerViewAdapter
         Button editButton;
         ImageView thumb;
 
+        /**
+         * Constructor of the view holder.
+         *
+         * @param itemView View of the item to be held.
+         */
         public WallpaperViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
@@ -65,33 +81,62 @@ public class RecyclerViewAdapter
             thumb = (ImageView) itemView.findViewById(R.id.wallpaper_thumb);
             editButton = (Button) itemView.findViewById(R.id.edit_button);
 
-            // Tags the button to retrieve the WallpaperViewHolder reference later
+            // Tags the button to retrieve the WallpaperViewHolder reference later for the edit button.
             editButton.setTag(this);
         }
     }
 
+    /**
+     * Constructor of the adapter class.
+     *
+     * @param context       Application context.
+     * @param wallpaperList Reference to used list.
+     * @param wallpaperData Reference to used WallpaperData.
+     */
     public RecyclerViewAdapter(Context context, List<Wallpaper> wallpaperList, WallpaperData wallpaperData) {
         this.context = context;
         this.wallpaperList = wallpaperList;
         this.wallpaperData = wallpaperData;
     }
 
+    /**
+     * @return Size of the adapted list.
+     */
     @Override
     public int getItemCount() {
         return wallpaperList.size();
     }
 
+    /**
+     * Called when a ViewHolder is created.
+     *
+     * @param viewGroup ViewGroup containing the item views.
+     * @param i         Number of the item view in the group.
+     * @return          ViewHolder for the item view.
+     */
     @Override
     public WallpaperViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
         return new WallpaperViewHolder(v);
     }
 
+    /**
+     * Called when the adapter is attached to the RecyclerView.
+     *
+     * @param recyclerView Attached RecyclerView.
+     */
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    /**
+     * Called when the ViewHolder is bound to the RecyclerView.
+     * Sets the cards fields and sets up the button listener.
+     *
+     * @param wallpaperViewHolder Bound ViewHolder.
+     * @param i                   Position of the View in the adapted list.
+     */
     @Override
     public void onBindViewHolder(WallpaperViewHolder wallpaperViewHolder, int i) {
         wallpaperViewHolder.name.setText(wallpaperList.get(i).getName());
@@ -117,6 +162,15 @@ public class RecyclerViewAdapter
         });
     }
 
+    /**
+     * Called when an item of the list is moved.
+     *
+     * @param fromPosition Previous position of the selected card.
+     * @param toPosition   New position of the selected card.
+     * @return             True the item was moved.
+     *
+     * @see ItemTouchHelperAdapter
+     */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(wallpaperList, fromPosition, toPosition);
@@ -133,6 +187,12 @@ public class RecyclerViewAdapter
         return true;
     }
 
+    /**
+     * Called when an item of the list is dismissed with a swipe.
+     *
+     * @param position Position of the dismissed card.
+     * @return         True if the item was dismissed.
+     */
     @Override
     public boolean onItemDismiss(int position) {
 
@@ -148,7 +208,7 @@ public class RecyclerViewAdapter
             wallpaperList.get(i).decrementPosition();
         }
 
-        // Write to database
+        // Writes to database
         wallpaperData.clearAndInsertWallpaperList(wallpaperList);
 
         return true;
