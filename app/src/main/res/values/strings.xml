@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     
     <string-array name="spinner_text">
+        <item></item>
         <item>Wi-Fi</item>
         <item>Time</item>
     </string-array>

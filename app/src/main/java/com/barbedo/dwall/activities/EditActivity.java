@@ -129,8 +129,10 @@ public class EditActivity extends AppCompatActivity
         if (name.equals("")) {
             Snackbar.make(v, "Please, select a name.", Snackbar.LENGTH_SHORT)
                     .show();
+        } else if (spinner.getSelectedItemPosition() == 0) {
+            Snackbar.make(v, "Please, select a mode.", Snackbar.LENGTH_SHORT)
+                    .show();
         } else {
-
             // Commit the selected wallpaper to the database
             wallpaper.setName(name);
             wallpaper.setMode(spinner.getSelectedItem().toString());
@@ -233,8 +235,8 @@ public class EditActivity extends AppCompatActivity
      * @see com.barbedo.dwall.fragments.TimePickerFragment.OnTimeSetListener
      */
     public void onTimeSelected(int id, int hourOfDay, int minute) {
-        switch (id) {
 
+        switch (id) {
             // Launches the end time picker and saves the start time info
             case START_TIME_PICKER:
                 DialogFragment newFragment = TimePickerFragment.newInstance(END_TIME_PICKER);
