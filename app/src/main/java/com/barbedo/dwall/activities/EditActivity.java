@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +46,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-public class EditActivity extends AppCompatActivity implements TimePickerFragment.OnTimeSetListener {
+public class EditActivity extends AppCompatActivity
+        implements TimePickerFragment.OnTimeSetListener, AdapterView.OnItemSelectedListener {
 
     private final String TAG = "EditActivity";
 
@@ -90,7 +92,9 @@ public class EditActivity extends AppCompatActivity implements TimePickerFragmen
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_text, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
+
 
         Log.d(TAG, "onCreate");
     }
@@ -187,7 +191,6 @@ public class EditActivity extends AppCompatActivity implements TimePickerFragmen
         }
     }
 
-
     public void onTimeSelected(int id, int hourOfDay, int minute) {
         switch (id) {
             case START_TIME_PICKER:
@@ -197,6 +200,24 @@ public class EditActivity extends AppCompatActivity implements TimePickerFragmen
             case END_TIME_PICKER:
                 break;
         }
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+//        if (parent.getItemAtPosition(pos). )
+
+//        Log.d(TAG, parent.getItemAtPosition(pos).toString());
+
+        if (parent.getItemAtPosition(pos).toString().equals("Time")) {
+            DialogFragment newFragment = TimePickerFragment.newInstance(START_TIME_PICKER);
+            newFragment.show(getSupportFragmentManager(), "timePicker");
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Ignore
     }
 }
 //    private void deleteFiles() {
