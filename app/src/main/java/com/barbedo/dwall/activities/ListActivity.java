@@ -37,6 +37,7 @@ import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -93,18 +94,44 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (wallpaperList.size() < 5) {
+                if (!Arrays.asList(fileList()).contains("default")) {
+                    Snackbar.make(view, "Please, set a default wallpaper.",
+                            Snackbar.LENGTH_LONG).show();
+                } else if (wallpaperList.size() >= 5) {
+                    Snackbar.make(view, "Maximum number of wallpapers reached.",
+                            Snackbar.LENGTH_LONG).show();
+                } else {
                     Intent intent = new Intent(ListActivity.this, EditActivity.class);
                     intent.putExtra(EXTRA_POSITION, wallpaperList.size());
                     startActivity(intent);
-                } else {
-                    Snackbar.make(view, "Maximum number of wallpapers reached.",
-                            Snackbar.LENGTH_LONG).show();
                 }
 
             }
         });
 
         Log.d(TAG, "onCreate");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_default) {
+            Log.d(TAG, "Set default selected");
+
+            Intent intent = new Intent(this, DefaultActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -22,6 +22,9 @@
         <activity
             android:name=".activities.EditActivity">
         </activity>
+        <activity
+            android:name=".activities.DefaultActivity">
+        </activity>
     </application>
 
 </manifest>
