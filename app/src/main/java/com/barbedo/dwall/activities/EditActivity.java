@@ -25,6 +25,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 import com.barbedo.dwall.fragments.TimePickerFragment;
+import com.barbedo.dwall.fragments.WifiFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,8 +63,10 @@ import java.util.List;
  * @author Ricardo Barbedo
  */
 public class EditActivity extends AppCompatActivity
-        implements TimePickerFragment.OnTimeSetListener, AdapterView.OnItemSelectedListener,
-                    View.OnTouchListener {
+        implements TimePickerFragment.OnTimeSetListener,
+                    AdapterView.OnItemSelectedListener,
+                    View.OnTouchListener,
+                    WifiFragment.OnWifiSetListener {
 
     private final String TAG = "EditActivity";
 
@@ -288,6 +292,10 @@ public class EditActivity extends AppCompatActivity
         }
     }
 
+    public void onWifiSelected(String wifiName) {
+        wallpaper.setInfo(wifiName);
+    }
+
 
     /**
      * Called when a touch event is detected for the view.
@@ -316,12 +324,18 @@ public class EditActivity extends AppCompatActivity
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
 
-        // Launch the time picker if the time mode is selected from the menu
+        // Launches the time picker if the time mode is selected from the menu
         if (parent.getItemAtPosition(pos).toString().equals("Time")
                 && userSelect) {
             DialogFragment newFragment = TimePickerFragment.newInstance(START_TIME_PICKER);
             newFragment.show(getSupportFragmentManager(), "timePicker");
             userSelect = false;
+
+        // Launches the wifi dialog if its picked from the menu
+        } else if (parent.getItemAtPosition(pos).toString().equals("Wi-Fi")
+                    && userSelect) {
+            WifiFragment editNameDialog = WifiFragment.newInstance("Wi-Fi name");
+            editNameDialog.show(getSupportFragmentManager(), "fragment_edit_name");
         }
     }
 
