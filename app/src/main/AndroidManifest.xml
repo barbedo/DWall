@@ -21,12 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.EditActivity">
-        </activity>
-        <activity
-            android:name=".activities.DefaultActivity">
-        </activity>
+        <activity android:name=".activities.EditActivity" />
+        <activity android:name=".activities.DefaultActivity" />
+
+        <receiver
+            android:name=".receivers.WifiReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
