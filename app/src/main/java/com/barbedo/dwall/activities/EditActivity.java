@@ -281,12 +281,12 @@ public class EditActivity extends AppCompatActivity
             case START_TIME_PICKER:
                 DialogFragment newFragment = TimePickerFragment.newInstance(END_TIME_PICKER);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
-                info = String.format("%2d %2d ", hourOfDay, minute);
+                info = String.format("%2d:%2d ", hourOfDay, minute);
                 break;
 
             // Saves the end time info
             case END_TIME_PICKER:
-                info = info + String.format("%2d %2d", hourOfDay, minute);
+                info = info + String.format("%2d:%2d", hourOfDay, minute);
                 wallpaper.setInfo(info);
                 break;
         }

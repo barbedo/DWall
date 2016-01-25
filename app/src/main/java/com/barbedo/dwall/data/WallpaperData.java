@@ -22,9 +22,14 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -176,6 +181,48 @@ public class WallpaperData {
         return wallpaperList;
     }
 
+    public List<Wallpaper> getActiveWallpaperList(Context context) {
+        List<Wallpaper> activeList = getWallpaperList();
+
+        // Wifi information
+        WifiManager wifiManager = (WifiManager)
+                context.getSystemService(Context.WIFI_SERVICE);
+        String wifiName = wifiManager.getConnectionInfo().getSSID().replace("\"", "");
+
+
+        for (Wallpaper wallpaper : activeList) {
+
+            // Wifi filter
+            if (wallpaper.getMode().equals("Wi-Fi") &&
+                    !wallpaper.getInfo().equals(wifiName)) {
+                activeList.remove(wallpaper);
+            }
+
+            // Time filter
+            if (wallpaper.getMode().equals("Time")) {
+                String[] times = wallpaper.getInfo().split("\\s+");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                Date now = new Date();
+                String currentTime = dateFormat.format(now);
+                boolean isInInterval = false;
+
+                try {
+                    isInInterval = isTimeInInterval(times[0], times[1], currentTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (!isInInterval) {
+                    activeList.remove(wallpaper);
+                }
+
+            }
+        }
+
+
+        return activeList;
+    }
+
     /**
      * @param wallpaper Deletes the wallpaper file and its thumbnail
      */
@@ -186,5 +233,60 @@ public class WallpaperData {
         } else {
             Log.d(TAG, "No file found");
         }
+    }
+
+    private static boolean isTimeInInterval(String argStartTime,
+                                               String argEndTime,
+                                               String argCurrentTime) throws ParseException {
+        boolean valid = false;
+
+        // Start Time
+        Date startTime = new SimpleDateFormat("HH:mm")
+                .parse(argStartTime);
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startTime);
+
+        // Current Time
+        Date currentTime = new SimpleDateFormat("HH:mm")
+                .parse(argCurrentTime);
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTime(currentTime);
+
+        // End Time
+        Date endTime = new SimpleDateFormat("HH:mm")
+                .parse(argEndTime);
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endTime);
+
+
+        if (currentTime.compareTo(endTime) < 0) {
+            currentCalendar.add(Calendar.DATE, 1);
+            currentTime = currentCalendar.getTime();
+        }
+
+        if (startTime.compareTo(endTime) < 0) {
+            startCalendar.add(Calendar.DATE, 1);
+            startTime = startCalendar.getTime();
+        }
+
+        if (currentTime.before(startTime)) {
+            valid = false;
+
+        } else {
+
+            if (currentTime.after(endTime)) {
+                endCalendar.add(Calendar.DATE, 1);
+                endTime = endCalendar.getTime();
+            }
+
+            if (currentTime.before(endTime)) {
+                valid = true;
+            } else {
+                valid = false;
+            }
+
+        }
+
+        return valid;
     }
 }
