@@ -20,7 +20,9 @@ import android.app.Application;
 import android.util.Log;
 
 /**
- * Application object to allow all the components to share the same data
+ * Application object to allow all the components to share the same data.
+ *
+ * @author Ricardo Barbedo
  */
 public class DWallApplication extends Application {
 

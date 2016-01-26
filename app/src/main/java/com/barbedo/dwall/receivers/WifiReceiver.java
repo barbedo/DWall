@@ -1,3 +1,19 @@
+/**
+ * Copyright 2016 Ricardo Barbedo
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.barbedo.dwall.receivers;
 
 import android.content.BroadcastReceiver;
@@ -11,6 +27,13 @@ import android.util.Log;
 
 import com.barbedo.dwall.services.WifiService;
 
+/**
+ * Receiver that listens to the wifi state activity and launches the WifiService.
+ * This receiver filters the CONNECTIVITY_CHANGE and the WIFI_STATE_CHANGED broadcasts to see
+ * if the network is down or if it was changed and launches the WifiService to change the wallpaper.
+ *
+ * @author Ricardo Barbedo
+ */
 public class WifiReceiver extends BroadcastReceiver {
 
     private final static String TAG = "WifiReceiver";
@@ -48,40 +71,5 @@ public class WifiReceiver extends BroadcastReceiver {
                 context.startService(intent);
             }
         }
-
-        //String bssid = callingIntent.getStringExtra(WifiManager.EXTRA_BSSID);
-
-        //if (bssid != null) {
-         //   if (!bssid.equals("bssid")) {
-//                Log.d(TAG, "startService");
-//                Intent intent = new Intent(context, WifiService.class);
-//                context.startService(intent);
-        //    }
-        //}
-
-
-
-//        ConnectivityManager connectivityManager =
-//                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//
-//        if (connectivityManager.getActiveNetworkInfo() != null) {
-//            int type = connectivityManager.getActiveNetworkInfo().getType();
-//
-//            Log.d(TAG, "Intent received. Type: " + type);
-//
-//            if (type == ConnectivityManager.TYPE_WIFI) {
-//                context.startService(intent);
-//            }
-//        } else {
-//            if (firstConnect) {
-//                Log.d(TAG, "No connectivity");
-//                context.startService(intent);
-//                firstConnect = false;
-//            } else {
-//                firstConnect = true;
-//            }
-//        }
-
     }
 }

@@ -42,7 +42,14 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- * Created by ricardo on 1/25/16.
+ * Selects the default wallpaper.
+ *
+ * This activity launches the default gallery activity to select the default wallpaper to be used.
+ *
+ * The selected image is saved to the internal storage with the name "default" and a thumbnail is
+ * generated.
+ *
+ * @author Ricardo Barbedo
  */
 public class DefaultActivity extends AppCompatActivity {
 

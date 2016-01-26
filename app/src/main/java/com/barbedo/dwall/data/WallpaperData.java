@@ -34,6 +34,8 @@ import java.util.List;
 
 /**
  * Manages the SQLite database and provides wrapper methods to access and modify it.
+ *
+ * @author Ricardo Barbedo
  */
 public class WallpaperData {
 
@@ -236,6 +238,16 @@ public class WallpaperData {
         }
     }
 
+    /**
+     * This functions determines if the specified time is between a start time and an end time.
+     * All the times are strings with the format HH:mm.
+     *
+     * @param argStartTime    Start time string
+     * @param argEndTime      End time string
+     * @param argCurrentTime  Current time string
+     * @return                True if the current time is in the interval, false otherwise.
+     * @throws ParseException
+     */
     private static boolean isTimeInInterval(String argStartTime,
                                                String argEndTime,
                                                String argCurrentTime) throws ParseException {

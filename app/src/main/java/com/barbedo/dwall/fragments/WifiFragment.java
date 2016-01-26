@@ -31,7 +31,11 @@ import android.widget.EditText;
 import com.barbedo.dwall.R;
 
 /**
- * Placeholder
+ * Dialog fragment to specify the Wi-Fi name.
+ *
+ * The input name is returned to the parent activity with the OnWifiSetListener interface.
+ *
+ * @author Ricardo Barbedo
  */
 public class WifiFragment extends DialogFragment {
 
