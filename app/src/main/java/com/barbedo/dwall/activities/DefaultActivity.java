@@ -34,12 +34,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.barbedo.dwall.R;
+import com.barbedo.dwall.data.DWallApplication;
+import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Selects the default wallpaper.
@@ -96,9 +99,20 @@ public class DefaultActivity extends AppCompatActivity {
      * @param v Ok button.
      */
     public void registerWallpaper(View v) {
-            Intent intent = new Intent(this, ListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack
-            startActivity(intent);
+
+        // Sets the default wallpaper if there is no active wallpaper
+        DWallApplication application = (DWallApplication) getApplication();
+        WallpaperData wallpaperData = application.getWallpaperData();
+        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(this);
+        // TODO: Move to an AsyncTask (too much work on the UI thread)
+        if (activeWallpapers.size() == 0) {
+                WallpaperData.setWallpaper(this, new Wallpaper("default"));
+                Log.d(TAG, "Default wallpaper set");
+        }
+
+        Intent intent = new Intent(this, ListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack
+        startActivity(intent);
     }
 
     /**
