@@ -16,6 +16,7 @@
 
 package com.barbedo.dwall.activities;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -47,6 +48,7 @@ import com.barbedo.dwall.fragments.WifiFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -179,6 +181,25 @@ public class EditActivity extends AppCompatActivity
             wallpaperData.insertWallpaper(wallpaper);
 
             Log.d(TAG, "Wallpaper saved: " + wallpaper.toString());
+
+            // Sets the wallpaper if its on the top of the priority list
+            // TODO: Put it in an AsyncTask
+            List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
+            if (activeList.size() > 0) {
+                if (activeList.get(0).getFilename().
+                        equals(wallpaper.getFilename())) {
+
+                    File file = getFileStreamPath(activeList.get(0).getFilename());
+                    Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
+                    try {
+                        WallpaperManager.getInstance(getApplicationContext()).
+                                setBitmap(wallpaperImage);
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, wallpaper.toString() + " set");
+                }
+            }
 
             Intent intent = new Intent(this, ListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack
