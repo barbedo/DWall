@@ -17,8 +17,11 @@
 package com.barbedo.dwall.adapters;
 
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +40,8 @@ import com.barbedo.dwall.activities.ListActivity;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -202,6 +207,26 @@ public class RecyclerViewAdapter
     public boolean onItemDismiss(int position) {
 
         Log.d(TAG, "onItemDismiss");
+
+        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
+
+        // Sets default wallpaper if the current one is dismissed from the list
+        // TODO: Move to an AsyncTask (too much work on the UI thread)
+        if (activeWallpapers.size() > 0) {
+            if (activeWallpapers.get(0).getFilename().
+                    equals(wallpaperList.get(position).getFilename())) {
+
+                File file = context.getFileStreamPath("default");
+                Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
+                try {
+                    WallpaperManager.getInstance(context.getApplicationContext()).
+                            setBitmap(wallpaperImage);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Default wallpaper set");
+            }
+        }
 
         wallpaperData.deleteWallpaper(context, wallpaperList.get(position));
 

@@ -44,4 +44,5 @@ public class DWallApplication extends Application {
     public WallpaperData getWallpaperData() {
         return wallpaperData;
     }
+
 }
