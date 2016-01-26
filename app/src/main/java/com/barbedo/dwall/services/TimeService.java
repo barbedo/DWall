@@ -40,15 +40,24 @@ import java.util.List;
 
 
 /**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
+ * Service used to listen to time alarms and set the system wallpaper.
+ *
+ * This service can receive intents with three actions: ACTION_SET_ALARM, ACTION_UNSET_ALARM and
+ * ACTION_ALARM. The first two are used by other activities to make the service register or
+ * unregister the daily repeating alarms for the time mode wallpaper. The third action is the one
+ * received with the intent sent by the alarm and is used to set the system wallpaper.
+ *
+ * As this class uses the method AlarmManager.setInexactRepeating, the time the alarm is called
+ * can be off by anything between 0 and 10 minutes. The system will bundle different alarms and
+ * send them off when it wants to manage the battery life. This should not have that much impact
+ * on the final user.
+ *
+ * @author Ricardo Barbedo
  */
 public class TimeService extends IntentService {
 
     private static final String TAG = "TimeService";
 
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_SET_ALARM = "com.barbedo.dwall.services.action.SET_ALARM";
     public static final String ACTION_UNSET_ALARM = "com.barbedo.dwall.services.action.UNSET_ALARM";
     public static final String ACTION_ALARM = "com.barbedo.dwall.services.action.ALARM";
@@ -89,60 +98,12 @@ public class TimeService extends IntentService {
     }
 
     /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
+     * Sets the start and the end alarms.
+     *
+     * @param info     Information field from the wallpaper.
+     * @param filename Filename field from the wallpaper.
      */
     private void handleActionSet(String info, String filename) {
-
-        // Set alarm with supplied information
-
-//        String[] times = info.split("\\s+");
-//        Date startTime = new Date();
-//        Date endTime = new Date();
-//
-//        try {
-//            startTime = new SimpleDateFormat("HH:mm").parse(times[0]);
-//            endTime = new SimpleDateFormat("HH:mm").parse(times[1]);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        Calendar calendarStart = Calendar.getInstance();
-//        Calendar calendarEnd = Calendar.getInstance();
-//        calendarStart.setTime(startTime);
-//        calendarEnd.setTime(endTime);
-
-//        int startHour = Integer.parseInt(info.substring(0,2));
-//        int startMinute = Integer.parseInt(info.substring(3,5));
-//        int endHour = Integer.parseInt(info.substring(6,8));
-//        int endMinute = Integer.parseInt(info.substring(9,11));
-//
-//        Calendar calendarStart = Calendar.getInstance();
-//        Calendar calendarEnd = Calendar.getInstance();
-//
-//        calendarStart.set(Calendar.HOUR_OF_DAY, startHour);
-//        calendarStart.set(Calendar.MINUTE, startMinute);
-//        calendarStart.set(Calendar.SECOND, 0);
-//
-//        calendarEnd.set(Calendar.HOUR_OF_DAY, endHour);
-//        calendarEnd.set(Calendar.MINUTE, endMinute);
-//        calendarEnd.set(Calendar.SECOND, 0);
-//
-//        Intent intentStart = new Intent(this, TimeService.class);
-//        intentStart.setAction(ACTION_ALARM);
-//        intentStart.putExtra(EXTRA_STATE, "start");
-//        intentStart.putExtra(EXTRA_FILENAME, filename);
-//
-//        Intent intentEnd = new Intent(this, TimeService.class);
-//        intentEnd.setAction(ACTION_ALARM);
-//        intentEnd.putExtra(EXTRA_STATE, "end");
-//        intentEnd.putExtra(EXTRA_FILENAME, filename);
-//
-//        PendingIntent pendingIntentStart = PendingIntent.getService(this, ID_SET_START,
-//                intentStart, PendingIntent.FLAG_UPDATE_CURRENT);
-//        PendingIntent pendingIntentEnd = PendingIntent.getService(this, ID_SET_END,
-//                intentEnd, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar calendarStart = getCalendarFromInfo(ID_SET_START, info);
         Calendar calendarEnd = getCalendarFromInfo(ID_SET_END, info);
@@ -157,8 +118,10 @@ public class TimeService extends IntentService {
     }
 
     /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
+     * Unregisters the two alarms.
+     *
+     * @param info     Information field from the wallpaper.
+     * @param filename Filename field from the wallpaper.
      */
     private void handleActionUnset(String info, String filename) {
 
@@ -173,8 +136,10 @@ public class TimeService extends IntentService {
     }
 
     /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
+     * Handles the alarm action.
+     *
+     * @param state    The state of the alarm, "start" or "end".
+     * @param filename The filename field from the wallpaper.
      */
     private void handleActionAlarm(String state, String filename) {
 
@@ -190,60 +155,28 @@ public class TimeService extends IntentService {
                 if (activeList.get(0).getMode().equals("Time") &&
                         activeList.get(0).getFilename().equals(filename)) {
 
-                    WallpaperManager wallpaperManager
-                            = WallpaperManager.getInstance(getApplicationContext());
-
-                    File file = getFileStreamPath(activeList.get(0).getFilename());
-
-                    Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-
-                    try {
-                        wallpaperManager.setBitmap(wallpaperImage);
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
-
+                    WallpaperData.setWallpaper(this, activeList.get(0));
                     Log.d(TAG, activeList.get(0).toString() + " set");
                 }
             }
 
-
         } else if (state.equals("end")) {
 
             if (activeList.size() > 0) {
-
-                // Sets the wallpaper
-                WallpaperManager wallpaperManager
-                        = WallpaperManager.getInstance(getApplicationContext());
-
-                File file = getFileStreamPath(activeList.get(0).getFilename());
-
-                Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-
-                try {
-                    wallpaperManager.setBitmap(wallpaperImage);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-
+                WallpaperData.setWallpaper(this, activeList.get(0));
                 Log.d(TAG, activeList.get(0).toString() + " set");
             } else {
-
-                WallpaperManager wallpaperManager
-                        = WallpaperManager.getInstance(getApplicationContext());
-                // sets default
-                File file = getFileStreamPath("default");
-                Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-                try {
-                    wallpaperManager.setBitmap(wallpaperImage);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
+                WallpaperData.setWallpaper(this, new Wallpaper("default"));
                 Log.d(TAG, "Default wallpaper set");
             }
         }
     }
 
+    /**
+     * @param id       Identifies the start and the end alarms with ID_SET_START and ID_SET_STOP.
+     * @param filename The filename field from the wallpaper.
+     * @return         A PendingIntent with the proper extras.
+     */
     private PendingIntent getPendingIntentFromFilename(int id, String filename) {
 
         String extraState;
@@ -270,6 +203,11 @@ public class TimeService extends IntentService {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    /**
+     * @param id   Identifies the start and the end alarms with ID_SET_START and ID_SET_STOP.
+     * @param info Information field from the wallpaper.
+     * @return     A calendar instance at the specified time.
+     */
     private Calendar getCalendarFromInfo(int id, String info) {
 
         int hour, minute;

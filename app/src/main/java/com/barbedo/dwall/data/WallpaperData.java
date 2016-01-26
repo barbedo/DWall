@@ -244,7 +244,7 @@ public class WallpaperData {
     }
 
     /**
-     * Sets the system wallpaper.
+     * Static method to set the system wallpaper.
      *
      * @param context    The current context
      * @param wallpaper  The wallpaper containing the filename

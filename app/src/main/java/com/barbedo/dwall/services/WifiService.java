@@ -52,13 +52,6 @@ public class WifiService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        // Wait 500ms for the SSID to resolve
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         DWallApplication application = (DWallApplication) getApplication();
         WallpaperData wallpaperData = application.getWallpaperData();
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
@@ -74,15 +67,15 @@ public class WifiService extends IntentService {
             if (activeList.get(0).getMode().equals("Wi-Fi") &&
                     activeList.get(0).getInfo().equals(currentName)) {
 
-                // Sets the wallpaper
+                // Sets the wallpaper at the top of the list
                 WallpaperData.setWallpaper(this, activeList.get(0));
 
                 Log.d(TAG, activeList.get(0).toString() + " set");
 
-            } else {
-                // sets the first one on the list
             }
+
         } else {
+
             // Sets the default wallpaper
             WallpaperData.setWallpaper(this, new Wallpaper("default"));
             Log.d(TAG, "Default wallpaper set");
