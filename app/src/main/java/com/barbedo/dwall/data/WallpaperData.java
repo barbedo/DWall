@@ -239,7 +239,8 @@ public class WallpaperData {
     }
 
     /**
-     * This functions determines if the specified time is between a start time and an end time.
+     * This functions determines if the specified time is between a start time (inclusive) and an
+     * end time (exclusive).
      * All the times are strings with the format HH:mm.
      *
      * @param argStartTime    Start time string

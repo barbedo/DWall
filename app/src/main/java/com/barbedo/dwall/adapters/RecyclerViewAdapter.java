@@ -39,6 +39,7 @@ import com.barbedo.dwall.activities.EditActivity;
 import com.barbedo.dwall.activities.ListActivity;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
+import com.barbedo.dwall.services.TimeService;
 
 import java.io.File;
 import java.io.IOException;
@@ -226,6 +227,16 @@ public class RecyclerViewAdapter
                 }
                 Log.d(TAG, "Default wallpaper set");
             }
+        }
+
+        // Cancel the alarms if in time mode
+        if (wallpaperList.get(position).getMode().equals("Time")) {
+            Intent serviceIntent = new Intent(context, TimeService.class);
+            serviceIntent.setAction(TimeService.ACTION_UNSET_ALARM);
+            serviceIntent.putExtra(TimeService.EXTRA_INFO, wallpaperList.get(position).getInfo());
+            serviceIntent.putExtra(TimeService.EXTRA_FILENAME, wallpaperList.get(position).getFilename());
+            context.startService(serviceIntent);
+            Log.d(TAG, "Alarm cancelled");
         }
 
         wallpaperData.deleteWallpaper(context, wallpaperList.get(position));

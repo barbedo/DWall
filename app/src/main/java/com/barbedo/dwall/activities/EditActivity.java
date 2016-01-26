@@ -45,6 +45,8 @@ import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 import com.barbedo.dwall.fragments.TimePickerFragment;
 import com.barbedo.dwall.fragments.WifiFragment;
+import com.barbedo.dwall.services.TimeService;
+import com.barbedo.dwall.services.WifiService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -201,6 +203,14 @@ public class EditActivity extends AppCompatActivity
                 }
             }
 
+            // Starts the TimeService to set the alarm
+            Intent serviceIntent = new Intent(this, TimeService.class);
+            serviceIntent.setAction(TimeService.ACTION_SET_ALARM);
+            serviceIntent.putExtra(TimeService.EXTRA_INFO, wallpaper.getInfo());
+            serviceIntent.putExtra(TimeService.EXTRA_FILENAME, wallpaper.getFilename());
+            startService(serviceIntent);
+
+            // Returns to the list activity
             Intent intent = new Intent(this, ListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack
             startActivity(intent);
@@ -302,12 +312,12 @@ public class EditActivity extends AppCompatActivity
             case START_TIME_PICKER:
                 DialogFragment newFragment = TimePickerFragment.newInstance(END_TIME_PICKER);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
-                info = String.format("%2d:%2d ", hourOfDay, minute);
+                info = String.format("%02d:%02d ", hourOfDay, minute);
                 break;
 
             // Saves the end time info
             case END_TIME_PICKER:
-                info = info + String.format("%2d:%2d", hourOfDay, minute);
+                info = info + String.format("%02d:%02d", hourOfDay, minute);
                 wallpaper.setInfo(info);
                 break;
         }
