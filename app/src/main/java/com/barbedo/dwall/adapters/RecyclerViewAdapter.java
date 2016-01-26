@@ -184,6 +184,7 @@ public class RecyclerViewAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+
         Collections.swap(wallpaperList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         Log.d(TAG, "onItemMove");
@@ -194,6 +195,18 @@ public class RecyclerViewAdapter
 
         // Write to database
         wallpaperData.clearAndInsertWallpaperList(wallpaperList);
+
+        // Sets wallpaper if the moved wallpaper is now on the top of the priority
+        // TODO: Move to an AsyncTask (too much work on the UI thread)
+        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
+        if (activeWallpapers.size() > 0) {
+            if (activeWallpapers.get(0).getFilename().
+                    equals(wallpaperList.get(toPosition).getFilename())) {
+
+                WallpaperData.setWallpaper(context, wallpaperList.get(toPosition));
+                Log.d(TAG, "Default wallpaper set");
+            }
+        }
 
         return true;
     }
@@ -209,9 +222,8 @@ public class RecyclerViewAdapter
 
         Log.d(TAG, "onItemDismiss");
 
-        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
-
         // Sets default wallpaper if the current one is dismissed from the list
+        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
         // TODO: Move to an AsyncTask (too much work on the UI thread)
         if (activeWallpapers.size() > 0) {
             if (activeWallpapers.get(0).getFilename().
