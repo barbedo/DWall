@@ -67,9 +67,6 @@ public class WifiService extends IntentService {
 
         Log.d(TAG, "Wi-Fi name: " + currentName);
 
-        WallpaperManager wallpaperManager
-                = WallpaperManager.getInstance(getApplicationContext());
-
         if (activeList.size() > 0) {
 
             Log.d(TAG, "Priority: " + activeList.get(0).toString());
@@ -78,32 +75,16 @@ public class WifiService extends IntentService {
                     activeList.get(0).getInfo().equals(currentName)) {
 
                 // Sets the wallpaper
-                File file = getFileStreamPath(activeList.get(0).getFilename());
-
-                Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-
-                try {
-                    wallpaperManager.setBitmap(wallpaperImage);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
+                WallpaperData.setWallpaper(this, activeList.get(0));
 
                 Log.d(TAG, activeList.get(0).toString() + " set");
-
 
             } else {
                 // sets the first one on the list
             }
         } else {
-
             // Sets the default wallpaper
-            File file = getFileStreamPath("default");
-            Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-            try {
-                wallpaperManager.setBitmap(wallpaperImage);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+            WallpaperData.setWallpaper(this, new Wallpaper("default"));
             Log.d(TAG, "Default wallpaper set");
         }
     }

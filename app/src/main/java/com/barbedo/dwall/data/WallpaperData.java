@@ -16,15 +16,20 @@
 
 package com.barbedo.dwall.data;
 
+import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -239,6 +244,26 @@ public class WallpaperData {
     }
 
     /**
+     * Sets the system wallpaper.
+     *
+     * @param context    The current context
+     * @param wallpaper  The wallpaper containing the filename
+     */
+    public static void setWallpaper(Context context, Wallpaper wallpaper) {
+
+        File file = context.getFileStreamPath(wallpaper.getFilename());
+
+        Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
+
+        try {
+            WallpaperManager.getInstance(context.getApplicationContext()).
+                    setBitmap(wallpaperImage);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * This functions determines if the specified time is between a start time (inclusive) and an
      * end time (exclusive).
      * All the times are strings with the format HH:mm.
@@ -246,7 +271,7 @@ public class WallpaperData {
      * @param argStartTime    Start time string
      * @param argEndTime      End time string
      * @param argCurrentTime  Current time string
-     * @return                True if the current time is in the interval, false otherwise.
+     * @return                True if the current time is in the interval, false otherwise
      * @throws ParseException
      */
     private static boolean isTimeInInterval(String argStartTime,

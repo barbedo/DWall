@@ -56,6 +56,16 @@ public class Wallpaper {
         this.filename = filename;
     }
 
+    /**
+     * Constructor with only the filename specified.
+     * Useful for setting the default wallpaper.
+     *
+     * @param filename Name of the corresponding wallpaper saved in the internal storage.
+     */
+    public Wallpaper(String filename) {
+        this.filename = filename;
+    }
+
     public int getPosition() {
         return position;
     }

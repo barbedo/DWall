@@ -191,14 +191,7 @@ public class EditActivity extends AppCompatActivity
                 if (activeList.get(0).getFilename().
                         equals(wallpaper.getFilename())) {
 
-                    File file = getFileStreamPath(activeList.get(0).getFilename());
-                    Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-                    try {
-                        WallpaperManager.getInstance(getApplicationContext()).
-                                setBitmap(wallpaperImage);
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
+                    WallpaperData.setWallpaper(this, wallpaper);
                     Log.d(TAG, wallpaper.toString() + " set");
                 }
             }

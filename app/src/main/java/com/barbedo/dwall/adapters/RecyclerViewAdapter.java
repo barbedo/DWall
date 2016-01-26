@@ -217,14 +217,7 @@ public class RecyclerViewAdapter
             if (activeWallpapers.get(0).getFilename().
                     equals(wallpaperList.get(position).getFilename())) {
 
-                File file = context.getFileStreamPath("default");
-                Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-                try {
-                    WallpaperManager.getInstance(context.getApplicationContext()).
-                            setBitmap(wallpaperImage);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
+                WallpaperData.setWallpaper(context, new Wallpaper("default"));
                 Log.d(TAG, "Default wallpaper set");
             }
         }
