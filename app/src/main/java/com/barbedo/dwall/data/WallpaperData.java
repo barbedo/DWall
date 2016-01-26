@@ -182,7 +182,8 @@ public class WallpaperData {
     }
 
     public List<Wallpaper> getActiveWallpaperList(Context context) {
-        List<Wallpaper> activeList = getWallpaperList();
+        List<Wallpaper> wallpaperList = getWallpaperList();
+        List<Wallpaper> activeList = new ArrayList<Wallpaper>();
 
         // Wifi information
         WifiManager wifiManager = (WifiManager)
@@ -190,12 +191,13 @@ public class WallpaperData {
         String wifiName = wifiManager.getConnectionInfo().getSSID().replace("\"", "");
 
 
-        for (Wallpaper wallpaper : activeList) {
+        for (Wallpaper wallpaper : wallpaperList) {
 
             // Wifi filter
             if (wallpaper.getMode().equals("Wi-Fi") &&
-                    !wallpaper.getInfo().equals(wifiName)) {
-                activeList.remove(wallpaper);
+                    wallpaper.getInfo().equals(wifiName)) {
+                activeList.add(wallpaper);
+                Log.d(TAG, "active: " + wallpaper.toString());
             }
 
             // Time filter
@@ -212,13 +214,12 @@ public class WallpaperData {
                     e.printStackTrace();
                 }
 
-                if (!isInInterval) {
-                    activeList.remove(wallpaper);
+                if (isInInterval) {
+                    activeList.add(wallpaper);
+                    Log.d(TAG, "active: " + wallpaper.toString());
                 }
-
             }
         }
-
 
         return activeList;
     }

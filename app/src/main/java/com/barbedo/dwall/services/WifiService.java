@@ -36,6 +36,13 @@ public class WifiService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        // Wait 500ms for the SSID to resolve
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         DWallApplication application = (DWallApplication) getApplication();
         WallpaperData wallpaperData = application.getWallpaperData();
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
