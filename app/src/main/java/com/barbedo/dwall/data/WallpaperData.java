@@ -302,6 +302,17 @@ public class WallpaperData {
     }
 
     /**
+     * @param context The current context
+     * @return        The filename of the current wallpaper
+     */
+    public static String getCurrentWallpaperName(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(context.getString(R.string.current_wallpaper_key),
+                "no entry");
+    }
+
+    /**
      * This functions determines if the specified time is between a start time (inclusive) and an
      * end time (exclusive).
      * All the times are strings with the format HH:mm.

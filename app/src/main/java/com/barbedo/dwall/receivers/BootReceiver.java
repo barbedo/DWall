@@ -29,6 +29,8 @@ import java.util.List;
 
 /**
  * Receiver that rearms all the alarms on boot.
+ *
+ * @author Ricardo Barbedo
  */
 public class BootReceiver extends BroadcastReceiver {
 
