@@ -192,6 +192,15 @@ public class WallpaperData {
         return wallpaperList;
     }
 
+
+    /**
+     * This method returns a list of the wallpapers that meet the criteria to be active.
+     * The list is ordered by the priority of the wallpaper, the same order they are displayed
+     * on the ListActivity.
+     *
+     * @param context  The current context, to retrieve the WifiManager.
+     * @return         A list of the wallpapers that meet the criteria to be active.
+     */
     public List<Wallpaper> getActiveWallpaperList(Context context) {
         List<Wallpaper> wallpaperList = getWallpaperList();
         List<Wallpaper> activeList = new ArrayList<Wallpaper>();
