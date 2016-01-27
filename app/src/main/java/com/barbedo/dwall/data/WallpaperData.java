@@ -302,6 +302,25 @@ public class WallpaperData {
     }
 
     /**
+     * Sets wallpaper on the top of the priority lists or the default if the list is empty.
+     *
+     * This function is used whenever an action can cause the wallpaper to change, such as
+     * setting a new wallpaper, dismissing one or reordering the priority list.
+     */
+    public static void setOrIgnoreWallpaper(Context context, List<Wallpaper> activeList) {
+
+        String current = getCurrentWallpaperName(context);
+
+        if (activeList.size() > 0) {
+            if (!current.equals(activeList.get(0))) {
+                setWallpaper(context, activeList.get(0));
+            }
+        } else if (!current.equals("default")) {
+            setWallpaper(context, new Wallpaper("default"));
+        }
+    }
+
+    /**
      * @param context The current context
      * @return        The filename of the current wallpaper
      */

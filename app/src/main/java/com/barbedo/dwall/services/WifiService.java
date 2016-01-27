@@ -54,31 +54,13 @@ public class WifiService extends IntentService {
 
         DWallApplication application = (DWallApplication) getApplication();
         WallpaperData wallpaperData = application.getWallpaperData();
-        List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         String currentName = wifiManager.getConnectionInfo().getSSID().replace("\"", "");
 
         Log.d(TAG, "Wi-Fi name: " + currentName);
 
-        if (activeList.size() > 0) {
-
-            Log.d(TAG, "Priority: " + activeList.get(0).toString());
-
-            if (activeList.get(0).getMode().equals("Wi-Fi") &&
-                    activeList.get(0).getInfo().equals(currentName)) {
-
-                // Sets the wallpaper at the top of the list
-                WallpaperData.setWallpaper(this, activeList.get(0));
-
-                Log.d(TAG, activeList.get(0).toString() + " set");
-
-            }
-
-        } else {
-
-            // Sets the default wallpaper
-            WallpaperData.setWallpaper(this, new Wallpaper("default"));
-            Log.d(TAG, "Default wallpaper set");
-        }
+        // Sets default wallpaper if the current one is dismissed from the list
+        List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
+        WallpaperData.setOrIgnoreWallpaper(this, activeList);
     }
 }

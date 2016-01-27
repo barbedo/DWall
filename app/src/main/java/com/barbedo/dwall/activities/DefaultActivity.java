@@ -102,12 +102,9 @@ public class DefaultActivity extends AppCompatActivity {
         // Sets the default wallpaper if there is no active wallpaper
         DWallApplication application = (DWallApplication) getApplication();
         WallpaperData wallpaperData = application.getWallpaperData();
-        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(this);
+        List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
 
-        if (activeWallpapers.size() == 0) {
-                WallpaperData.setWallpaper(this, new Wallpaper("default"));
-                Log.d(TAG, "Default wallpaper set");
-        }
+        WallpaperData.setOrIgnoreWallpaper(this, activeList);
 
         Intent intent = new Intent(this, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack

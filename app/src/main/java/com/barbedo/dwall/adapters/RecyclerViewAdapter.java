@@ -167,7 +167,6 @@ public class RecyclerViewAdapter
                 Intent intent = new Intent(v.getContext(), EditActivity.class);
                 intent.putExtra(ListActivity.EXTRA_POSITION, position);
                 v.getContext().startActivity(intent);
-                //Toast.makeText(v.getContext(), "edit " + position, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -196,16 +195,8 @@ public class RecyclerViewAdapter
         wallpaperData.clearAndInsertWallpaperList(wallpaperList);
 
         // Sets wallpaper if the moved wallpaper is now on the top of the priority
-        // TODO: Move to an AsyncTask (too much work on the UI thread)
-        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
-        if (activeWallpapers.size() > 0) {
-            if (activeWallpapers.get(0).getFilename().
-                    equals(wallpaperList.get(toPosition).getFilename())) {
-
-                WallpaperData.setWallpaper(context, wallpaperList.get(toPosition));
-                Log.d(TAG, "Default wallpaper set");
-            }
-        }
+        List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(context);
+        WallpaperData.setOrIgnoreWallpaper(context, activeList);
 
         return true;
     }
@@ -220,17 +211,6 @@ public class RecyclerViewAdapter
     public boolean onItemDismiss(int position) {
 
         Log.d(TAG, "onItemDismiss");
-
-        // Sets default wallpaper if the current one is dismissed from the list
-        List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
-        if (activeWallpapers.size() > 0) {
-            if (activeWallpapers.get(0).getFilename().
-                    equals(wallpaperList.get(position).getFilename())) {
-
-                WallpaperData.setWallpaper(context, new Wallpaper("default"));
-                Log.d(TAG, "Default wallpaper set");
-            }
-        }
 
         // Cancel the alarms if in time mode
         if (wallpaperList.get(position).getMode().equals("Time")) {
@@ -254,6 +234,10 @@ public class RecyclerViewAdapter
 
         // Writes to database
         wallpaperData.clearAndInsertWallpaperList(wallpaperList);
+
+        // Sets default wallpaper if the current one is dismissed from the list
+        List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(context);
+        WallpaperData.setOrIgnoreWallpaper(context, activeList);
 
         return true;
     }

@@ -186,17 +186,10 @@ public class EditActivity extends AppCompatActivity
 
             // Sets the wallpaper if its on the top of the priority list
             List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
-            if (activeList.size() > 0) {
-                if (activeList.get(0).getFilename().
-                        equals(wallpaper.getFilename())) {
+            WallpaperData.setOrIgnoreWallpaper(this, activeList);
 
-                    WallpaperData.setWallpaper(this, wallpaper);
-                    Log.d(TAG, wallpaper.toString() + " set");
-                }
-            }
-
+            // Starts the TimeService to set the alarm
             if (wallpaper.getMode().equals("Time")) {
-                // Starts the TimeService to set the alarm
                 Intent serviceIntent = new Intent(this, TimeService.class);
                 serviceIntent.setAction(TimeService.ACTION_SET_ALARM);
                 serviceIntent.putExtra(TimeService.EXTRA_INFO, wallpaper.getInfo());

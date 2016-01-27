@@ -149,27 +149,7 @@ public class TimeService extends IntentService {
 
         Log.d(TAG, "Action alarm: " + state);
 
-        if (state.equals("start")) {
-
-            if (activeList.size() > 0) {
-                if (activeList.get(0).getMode().equals("Time") &&
-                        activeList.get(0).getFilename().equals(filename)) {
-
-                    WallpaperData.setWallpaper(this, activeList.get(0));
-                    Log.d(TAG, activeList.get(0).toString() + " set");
-                }
-            }
-
-        } else if (state.equals("end")) {
-
-            if (activeList.size() > 0) {
-                WallpaperData.setWallpaper(this, activeList.get(0));
-                Log.d(TAG, activeList.get(0).toString() + " set");
-            } else {
-                WallpaperData.setWallpaper(this, new Wallpaper("default"));
-                Log.d(TAG, "Default wallpaper set");
-            }
-        }
+        WallpaperData.setOrIgnoreWallpaper(this, activeList);
     }
 
     /**
