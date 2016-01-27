@@ -33,8 +33,6 @@
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <!-- <action android:name="android.net.wifi.STATE_CHANGE" /> -->
-                <!-- <action android:name="android.net.wifi.supplicant.STATE_CHANGE" /> -->
             </intent-filter>
         </receiver>
 
@@ -43,7 +41,16 @@
             android:exported="false" />
         <service
             android:name=".services.TimeService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
