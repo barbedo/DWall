@@ -16,7 +16,6 @@
 
 package com.barbedo.dwall.adapters;
 
-
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
@@ -224,7 +223,6 @@ public class RecyclerViewAdapter
 
         // Sets default wallpaper if the current one is dismissed from the list
         List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(context);
-        // TODO: Move to an AsyncTask (too much work on the UI thread)
         if (activeWallpapers.size() > 0) {
             if (activeWallpapers.get(0).getFilename().
                     equals(wallpaperList.get(position).getFilename())) {

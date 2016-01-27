@@ -104,7 +104,7 @@ public class DefaultActivity extends AppCompatActivity {
         DWallApplication application = (DWallApplication) getApplication();
         WallpaperData wallpaperData = application.getWallpaperData();
         List<Wallpaper> activeWallpapers = wallpaperData.getActiveWallpaperList(this);
-        // TODO: Move to an AsyncTask (too much work on the UI thread)
+
         if (activeWallpapers.size() == 0) {
                 WallpaperData.setWallpaper(this, new Wallpaper("default"));
                 Log.d(TAG, "Default wallpaper set");

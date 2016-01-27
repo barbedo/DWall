@@ -185,7 +185,6 @@ public class EditActivity extends AppCompatActivity
             Log.d(TAG, "Wallpaper saved: " + wallpaper.toString());
 
             // Sets the wallpaper if its on the top of the priority list
-            // TODO: Put it in an AsyncTask
             List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
             if (activeList.size() > 0) {
                 if (activeList.get(0).getFilename().
@@ -196,12 +195,14 @@ public class EditActivity extends AppCompatActivity
                 }
             }
 
-            // Starts the TimeService to set the alarm
-            Intent serviceIntent = new Intent(this, TimeService.class);
-            serviceIntent.setAction(TimeService.ACTION_SET_ALARM);
-            serviceIntent.putExtra(TimeService.EXTRA_INFO, wallpaper.getInfo());
-            serviceIntent.putExtra(TimeService.EXTRA_FILENAME, wallpaper.getFilename());
-            startService(serviceIntent);
+            if (wallpaper.getMode().equals("Time")) {
+                // Starts the TimeService to set the alarm
+                Intent serviceIntent = new Intent(this, TimeService.class);
+                serviceIntent.setAction(TimeService.ACTION_SET_ALARM);
+                serviceIntent.putExtra(TimeService.EXTRA_INFO, wallpaper.getInfo());
+                serviceIntent.putExtra(TimeService.EXTRA_FILENAME, wallpaper.getFilename());
+                startService(serviceIntent);
+            }
 
             // Returns to the list activity
             Intent intent = new Intent(this, ListActivity.class);

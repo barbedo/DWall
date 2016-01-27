@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.File;
@@ -251,15 +252,32 @@ public class WallpaperData {
      */
     public static void setWallpaper(Context context, Wallpaper wallpaper) {
 
-        File file = context.getFileStreamPath(wallpaper.getFilename());
+          new SetWallpaper().execute(context, wallpaper);
+    }
 
-        Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
+    /**
+     * Static AsyncTask that sets the system wallpaper on the background without hogging the
+     * UI thread.
+     */
+    public static class SetWallpaper extends AsyncTask<Object, Void, Void> {
 
-        try {
-            WallpaperManager.getInstance(context.getApplicationContext()).
-                    setBitmap(wallpaperImage);
-        } catch (IOException e){
-            e.printStackTrace();
+        protected Void doInBackground(Object... params) {
+
+            Context context = (Context) params[0];
+            Wallpaper wallpaper = (Wallpaper) params[1];
+
+            File file = context.getFileStreamPath(wallpaper.getFilename());
+
+            Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
+
+            try {
+                WallpaperManager.getInstance(context.getApplicationContext()).
+                        setBitmap(wallpaperImage);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 
