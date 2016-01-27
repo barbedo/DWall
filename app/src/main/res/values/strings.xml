@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">D-Wall</string>
     <string name="action_settings">Settings</string>
+    <string name="shared_preferences_name">com.barbedo.dwall.SHARED_PREFERENCES</string>
+    <string name="current_wallpaper_key">com.barbedo.dwall.CURRENT_WALLPAPER_KEY</string>
     
     <string-array name="spinner_text">
         <item></item>

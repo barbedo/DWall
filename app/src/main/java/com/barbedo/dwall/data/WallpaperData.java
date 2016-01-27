@@ -19,6 +19,7 @@ package com.barbedo.dwall.data;
 import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,8 @@ import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.barbedo.dwall.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -252,7 +255,15 @@ public class WallpaperData {
      */
     public static void setWallpaper(Context context, Wallpaper wallpaper) {
 
-          new SetWallpaper().execute(context, wallpaper);
+        new SetWallpaper().execute(context, wallpaper);
+
+        // Writes the filename to the shared preferences to keep track of the current wallpaper
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.current_wallpaper_key),
+                wallpaper.getFilename());
+        editor.apply();
     }
 
     /**

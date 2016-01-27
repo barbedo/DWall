@@ -65,7 +65,6 @@ public class DefaultActivity extends AppCompatActivity {
     private ImageView preview;
     private Button okButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
