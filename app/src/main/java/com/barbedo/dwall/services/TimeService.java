@@ -29,6 +29,7 @@ import android.util.Log;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
+import com.barbedo.dwall.utils.WallpaperHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -149,7 +150,7 @@ public class TimeService extends IntentService {
 
         Log.d(TAG, "Action alarm: " + state);
 
-        WallpaperData.setOrIgnoreWallpaper(this, activeList);
+        WallpaperHelper.setOrIgnoreWallpaper(this, activeList);
     }
 
     /**

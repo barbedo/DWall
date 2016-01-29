@@ -34,7 +34,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 import com.barbedo.dwall.R;
 import com.barbedo.dwall.utils.CustomSpinner;
@@ -45,6 +44,7 @@ import com.barbedo.dwall.data.WallpaperData;
 import com.barbedo.dwall.fragments.TimePickerFragment;
 import com.barbedo.dwall.fragments.WifiFragment;
 import com.barbedo.dwall.services.TimeService;
+import com.barbedo.dwall.utils.WallpaperHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -185,7 +185,7 @@ public class EditActivity extends AppCompatActivity
 
             // Sets the wallpaper if its on the top of the priority list
             List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
-            WallpaperData.setOrIgnoreWallpaper(this, activeList);
+            WallpaperHelper.setOrIgnoreWallpaper(this, activeList);
 
             // Starts the TimeService to set the alarm
             if (wallpaper.getMode().equals("Time")) {
@@ -228,7 +228,7 @@ public class EditActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE) {
 
             // Delete files from last selection
-            wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+            WallpaperHelper.deleteWallpaper(getApplicationContext(), wallpaper);
 
             // Retrieves URI
             Uri uri = data.getData();
@@ -309,6 +309,11 @@ public class EditActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Wifi fragment callback.
+     *
+     * @param wifiName The name of the selected network.
+     */
     public void onWifiSelected(String wifiName) {
         wallpaper.setInfo(wifiName);
     }
@@ -381,11 +386,11 @@ public class EditActivity extends AppCompatActivity
             if (!wallpaperList.get(position).getFilename()
                     .equals(wallpaper.getFilename())) {
 
-                wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+                WallpaperHelper.deleteWallpaper(getApplicationContext(), wallpaper);
             }
             super.onBackPressed();
         } else {
-            wallpaperData.deleteWallpaper(getApplicationContext(), wallpaper);
+            WallpaperHelper.deleteWallpaper(getApplicationContext(), wallpaper);
             super.onBackPressed();
         }
     }

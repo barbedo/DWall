@@ -37,6 +37,7 @@ import com.barbedo.dwall.R;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
+import com.barbedo.dwall.utils.WallpaperHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -104,7 +105,7 @@ public class DefaultActivity extends AppCompatActivity {
         WallpaperData wallpaperData = application.getWallpaperData();
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
 
-        WallpaperData.setOrIgnoreWallpaper(this, activeList);
+        WallpaperHelper.setOrIgnoreWallpaper(this, activeList);
 
         Intent intent = new Intent(this, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // Clears stack

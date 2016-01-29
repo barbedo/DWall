@@ -102,6 +102,12 @@ public class WallpaperData {
     // Final assures that there is only one instance of the database helper when the app is running
     private final DbHelper dbHelper;
 
+
+    /**
+     * Constructor.
+     *
+     * @param context The current context.
+     */
     public WallpaperData(Context context) {
         this.dbHelper = new DbHelper(context);
         Log.d(TAG, "Initialized data");
@@ -244,92 +250,6 @@ public class WallpaperData {
         return activeList;
     }
 
-    /**
-     * @param wallpaper Deletes the wallpaper file and its thumbnail
-     */
-    public void deleteWallpaper(Context context, Wallpaper wallpaper) {
-        if (context.deleteFile(wallpaper.getFilename()) &&
-                context.deleteFile(wallpaper.getFilename() + "_th")) {
-            Log.d(TAG, "Files deleted");
-        } else {
-            Log.d(TAG, "No file found");
-        }
-    }
-
-    /**
-     * Static method to set the system wallpaper.
-     *
-     * @param context    The current context
-     * @param wallpaper  The wallpaper containing the filename
-     */
-    public static void setWallpaper(Context context, Wallpaper wallpaper) {
-
-        new SetWallpaper().execute(context, wallpaper);
-
-        // Writes the filename to the shared preferences to keep track of the current wallpaper
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.current_wallpaper_key),
-                wallpaper.getFilename());
-        editor.apply();
-    }
-
-    /**
-     * Static AsyncTask that sets the system wallpaper on the background without hogging the
-     * UI thread.
-     */
-    public static class SetWallpaper extends AsyncTask<Object, Void, Void> {
-
-        protected Void doInBackground(Object... params) {
-
-            Context context = (Context) params[0];
-            Wallpaper wallpaper = (Wallpaper) params[1];
-
-            File file = context.getFileStreamPath(wallpaper.getFilename());
-
-            Bitmap wallpaperImage = BitmapFactory.decodeFile(file.getPath());
-
-            try {
-                WallpaperManager.getInstance(context.getApplicationContext()).
-                        setBitmap(wallpaperImage);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    /**
-     * Sets wallpaper on the top of the priority lists or the default if the list is empty.
-     *
-     * This function is used whenever an action can cause the wallpaper to change, such as
-     * setting a new wallpaper, dismissing one or reordering the priority list.
-     */
-    public static void setOrIgnoreWallpaper(Context context, List<Wallpaper> activeList) {
-
-        String current = getCurrentWallpaperName(context);
-
-        if (activeList.size() > 0) {
-            if (!current.equals(activeList.get(0))) {
-                setWallpaper(context, activeList.get(0));
-            }
-        } else if (!current.equals("default")) {
-            setWallpaper(context, new Wallpaper("default"));
-        }
-    }
-
-    /**
-     * @param context The current context
-     * @return        The filename of the current wallpaper
-     */
-    public static String getCurrentWallpaperName(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
-        return sharedPreferences.getString(context.getString(R.string.current_wallpaper_key),
-                "no entry");
-    }
 
     /**
      * This functions determines if the specified time is between a start time (inclusive) and an

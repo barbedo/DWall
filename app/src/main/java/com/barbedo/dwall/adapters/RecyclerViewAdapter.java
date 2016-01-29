@@ -39,6 +39,7 @@ import com.barbedo.dwall.activities.ListActivity;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 import com.barbedo.dwall.services.TimeService;
+import com.barbedo.dwall.utils.WallpaperHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,7 +197,7 @@ public class RecyclerViewAdapter
 
         // Sets wallpaper if the moved wallpaper is now on the top of the priority
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(context);
-        WallpaperData.setOrIgnoreWallpaper(context, activeList);
+        WallpaperHelper.setOrIgnoreWallpaper(context, activeList);
 
         return true;
     }
@@ -222,7 +223,7 @@ public class RecyclerViewAdapter
             Log.d(TAG, "Alarm cancelled");
         }
 
-        wallpaperData.deleteWallpaper(context, wallpaperList.get(position));
+        WallpaperHelper.deleteWallpaper(context, wallpaperList.get(position));
 
         wallpaperList.remove(position);
         notifyItemRemoved(position);
@@ -237,7 +238,7 @@ public class RecyclerViewAdapter
 
         // Sets default wallpaper if the current one is dismissed from the list
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(context);
-        WallpaperData.setOrIgnoreWallpaper(context, activeList);
+        WallpaperHelper.setOrIgnoreWallpaper(context, activeList);
 
         return true;
     }

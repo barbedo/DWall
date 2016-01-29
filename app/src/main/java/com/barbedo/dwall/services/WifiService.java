@@ -29,6 +29,7 @@ import android.util.Log;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
+import com.barbedo.dwall.utils.WallpaperHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,6 @@ public class WifiService extends IntentService {
 
         // Sets default wallpaper if the current one is dismissed from the list
         List<Wallpaper> activeList = wallpaperData.getActiveWallpaperList(this);
-        WallpaperData.setOrIgnoreWallpaper(this, activeList);
+        WallpaperHelper.setOrIgnoreWallpaper(this, activeList);
     }
 }
