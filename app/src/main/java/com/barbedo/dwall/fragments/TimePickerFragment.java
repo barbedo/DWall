@@ -101,10 +101,19 @@ public class TimePickerFragment extends DialogFragment
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        // Recovers the identifier
+        int id = getArguments().getInt("id");
+
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
+
+        // Sets the end time picker to one hour on the future
+        if (id == EditActivity.END_TIME_PICKER) {
+            hour++;
+            hour = hour % 24;
+        }
 
         // Create a new instance of TimePickerDialog and return it
         final TimePickerDialog tpd = new TimePickerDialog(getActivity(), this, hour, minute,
@@ -129,9 +138,7 @@ public class TimePickerFragment extends DialogFragment
             }
         });
 
-        // Recovers the identifier to know what is the desired picker
-        int id = getArguments().getInt("id");
-
+        // Determines the correct picker
         switch (id) {
             case EditActivity.START_TIME_PICKER:
                 title.setText("Start");
