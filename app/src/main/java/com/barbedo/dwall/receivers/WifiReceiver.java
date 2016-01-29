@@ -51,8 +51,11 @@ public class WifiReceiver extends BroadcastReceiver {
             ConnectivityManager connectivityManager =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+            Log.d(TAG, "NetworkInfo null: " + String.valueOf(connectivityManager.getActiveNetworkInfo() == null));
+
             if (connectivityManager.getActiveNetworkInfo() != null) {
-                if (connectivityManager.getActiveNetworkInfo().isConnected()) {
+                if (connectivityManager.getActiveNetworkInfo().isConnected() ||
+                        connectivityManager.getActiveNetworkInfo().isFailover()) {
                     Log.d(TAG, "isConnected");
                     Intent intent = new Intent(context, WifiService.class);
                     context.startService(intent);
