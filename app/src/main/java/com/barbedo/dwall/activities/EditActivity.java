@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.barbedo.dwall.R;
+import com.barbedo.dwall.utils.CustomSpinner;
 import com.barbedo.dwall.utils.SpinnerArrayAdapter;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
@@ -90,7 +91,7 @@ public class EditActivity extends AppCompatActivity
     private ImageView preview;
     private Button okButton;
     private EditText nameEdit;
-    private Spinner spinner;
+    private CustomSpinner spinner;
 
     /**
      * Configures the UI.
@@ -112,7 +113,7 @@ public class EditActivity extends AppCompatActivity
         wallpaperData = dWallApplication.getWallpaperData();
 
         // Populates spinner
-        spinner = (Spinner) findViewById(R.id.mode_spinner);
+        spinner = (CustomSpinner) findViewById(R.id.mode_spinner);
 //        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 //                R.array.spinner_text, R.layout.spinner_item);
         SpinnerArrayAdapter<CharSequence> adapter = SpinnerArrayAdapter.createFromResource(this,
