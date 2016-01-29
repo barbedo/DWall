@@ -49,7 +49,6 @@
         android:layout_toEndOf="@+id/mode_text"
         android:layout_marginBottom="50dp" />
 
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +68,18 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp" />
+
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/preview"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

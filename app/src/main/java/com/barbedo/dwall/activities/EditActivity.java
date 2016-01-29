@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.barbedo.dwall.R;
 import com.barbedo.dwall.utils.CustomSpinner;
@@ -92,6 +93,7 @@ public class EditActivity extends AppCompatActivity
     private Button okButton;
     private EditText nameEdit;
     private CustomSpinner spinner;
+    private TextView infoText;
 
     /**
      * Configures the UI.
@@ -107,6 +109,7 @@ public class EditActivity extends AppCompatActivity
         okButton = (Button) findViewById(R.id.ok_button);
         okButton.setEnabled(false);
         nameEdit = (EditText) findViewById(R.id.name_edit);
+        infoText = (TextView) findViewById(R.id.info_text);
 
         wallpaper = new Wallpaper();
         dWallApplication = (DWallApplication) getApplication();
@@ -114,8 +117,6 @@ public class EditActivity extends AppCompatActivity
 
         // Populates spinner
         spinner = (CustomSpinner) findViewById(R.id.mode_spinner);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//                R.array.spinner_text, R.layout.spinner_item);
         SpinnerArrayAdapter<CharSequence> adapter = SpinnerArrayAdapter.createFromResource(this,
                 R.array.spinner_text, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
@@ -142,6 +143,8 @@ public class EditActivity extends AppCompatActivity
                             getFilename() + "_th").getAbsolutePath()));
             wallpaper.setFilename(lastWallpaper.getFilename());
             wallpaper.setInfo(lastWallpaper.getInfo());
+            wallpaper.setMode(lastWallpaper.getMode());
+            infoText.setText(WallpaperHelper.getReadableInfo(wallpaper));
 
             switch (lastWallpaper.getMode()) {
                 case "Wi-Fi":
@@ -169,7 +172,7 @@ public class EditActivity extends AppCompatActivity
 
         // Protects the button if a field is empty
         String name = nameEdit.getText().toString();
-        if (name.equals("")) {
+        if (name.equals("Select")) {
             Snackbar.make(v, "Please, select a name.", Snackbar.LENGTH_SHORT)
                     .show();
         } else if (spinner.getSelectedItemPosition() == 0) {
@@ -278,6 +281,8 @@ public class EditActivity extends AppCompatActivity
             case END_TIME_PICKER:
                 info = info + String.format("%02d:%02d", hourOfDay, minute);
                 wallpaper.setInfo(info);
+                wallpaper.setMode("Time");
+                infoText.setText(WallpaperHelper.getReadableInfo(wallpaper));
                 break;
         }
     }
@@ -289,6 +294,8 @@ public class EditActivity extends AppCompatActivity
      */
     public void onWifiSelected(String wifiName) {
         wallpaper.setInfo(wifiName);
+        wallpaper.setMode("Wi-Fi");
+        infoText.setText(WallpaperHelper.getReadableInfo(wallpaper));
     }
 
 

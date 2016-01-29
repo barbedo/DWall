@@ -178,4 +178,31 @@ public class WallpaperHelper {
         return sharedPreferences.getString(context.getString(R.string.current_wallpaper_key),
                 "no entry");
     }
+
+
+    /**
+     * @param wallpaper Wallpaper to extract the readable information.
+     * @return          A human readable string with the information about the wallpaper mode.
+     */
+    public static String getReadableInfo(Wallpaper wallpaper) {
+
+        String text;
+        String info = wallpaper.getInfo();
+
+        switch (wallpaper.getMode()) {
+            case "Time":
+                text = "Start: " + info.substring(0, 5) + "\nEnd: " + info.substring(6, 11);
+                break;
+            case "Wi-Fi":
+                text = "Wi-Fi name: " + info;
+                break;
+            default:
+                text = "";
+                break;
+        }
+
+        Log.d(TAG, "getReadableInfo: " + wallpaper.getMode());
+
+        return text;
+    }
 }
