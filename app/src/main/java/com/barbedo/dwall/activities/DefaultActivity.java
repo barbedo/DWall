@@ -136,34 +136,7 @@ public class DefaultActivity extends AppCompatActivity {
             Uri uri = data.getData();
 
             // Copies to internal data
-            try {
-                InputStream input = getContentResolver().openInputStream(uri);
-                FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
-                int bufferSize = 1024;
-                byte[] buffer = new byte[bufferSize];
-                int len = 0;
-                while ((len = input.read(buffer)) != -1) {
-                    fos.write(buffer, 0, len);
-                }
-                if (fos != null)
-                    fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            File filePath = getFileStreamPath(filename);
-            Log.d(TAG, "Internal filepath: " + filePath.toString());
-
-            // Create a thumbnail
-            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath.getAbsolutePath()),
-                    THUMB_WIDTH, THUMB_HEIGHT);
-            try {
-                FileOutputStream fos = openFileOutput(filename + "_th", Context.MODE_PRIVATE);
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            WallpaperHelper.copyWallpaperToStorage(this, uri, filename);
 
             // Displays thumbnail
             preview.setImageDrawable(Drawable.

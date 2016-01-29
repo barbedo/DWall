@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -28,7 +30,9 @@ import com.barbedo.dwall.R;
 import com.barbedo.dwall.data.Wallpaper;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -39,6 +43,54 @@ public class WallpaperHelper {
 
     private static final String TAG = WallpaperHelper.class.getSimpleName();
 
+    // Size of the thumbnail in pixels
+    private static final int THUMB_WIDTH = 108;
+    private static final int THUMB_HEIGHT = 192;
+
+    /**
+     * Static method to copy the selected file to the internal storage.
+     *
+     * This method also creates a thumbnail of the image with "_th" appended to the end of the
+     * name, so it can be set on the ImageView.
+     *
+     * @param context  The current context.
+     * @param uri      The wallpaper containing the filename.
+     * @param filename The name of the file to save.
+     */
+    public static void copyWallpaperToStorage(Context context, Uri uri, String filename) {
+        // Copies to internal data
+        try {
+            InputStream input = context.getContentResolver().openInputStream(uri);
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len = 0;
+            while ((len = input.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+            if (fos != null)
+                fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        File filePath = context.getFileStreamPath(filename);
+        Log.d(TAG, "Internal filepath: " + filePath.toString());
+
+        // Create a thumbnail
+        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.
+                decodeFile(filePath.getAbsolutePath()), THUMB_WIDTH, THUMB_HEIGHT);
+        try {
+            FileOutputStream fos =
+                    context.openFileOutput(filename + "_th", Context.MODE_PRIVATE);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * @param wallpaper Deletes the wallpaper file and its thumbnail
      */
@@ -48,6 +100,26 @@ public class WallpaperHelper {
             Log.d(TAG, "Files deleted");
         } else {
             Log.d(TAG, "No file found");
+        }
+    }
+
+
+    /**
+     * Sets wallpaper on the top of the priority lists or the default if the list is empty.
+     *
+     * This function is used whenever an action can cause the wallpaper to change, such as
+     * setting a new wallpaper, dismissing one or reordering the priority list.
+     */
+    public static void setOrIgnoreWallpaper(Context context, List<Wallpaper> activeList) {
+
+        String current = getCurrentWallpaperName(context);
+
+        if (activeList.size() > 0) {
+            if (!current.equals(activeList.get(0))) {
+                setWallpaper(context, activeList.get(0));
+            }
+        } else if (!current.equals("default")) {
+            setWallpaper(context, new Wallpaper("default"));
         }
     }
 
@@ -74,7 +146,7 @@ public class WallpaperHelper {
      * Static AsyncTask that sets the system wallpaper on the background without hogging the
      * UI thread.
      */
-    public static class SetWallpaper extends AsyncTask<Object, Void, Void> {
+    private static class SetWallpaper extends AsyncTask<Object, Void, Void> {
 
         protected Void doInBackground(Object... params) {
 
@@ -93,25 +165,6 @@ public class WallpaperHelper {
             }
 
             return null;
-        }
-    }
-
-    /**
-     * Sets wallpaper on the top of the priority lists or the default if the list is empty.
-     *
-     * This function is used whenever an action can cause the wallpaper to change, such as
-     * setting a new wallpaper, dismissing one or reordering the priority list.
-     */
-    public static void setOrIgnoreWallpaper(Context context, List<Wallpaper> activeList) {
-
-        String current = getCurrentWallpaperName(context);
-
-        if (activeList.size() > 0) {
-            if (!current.equals(activeList.get(0))) {
-                setWallpaper(context, activeList.get(0));
-            }
-        } else if (!current.equals("default")) {
-            setWallpaper(context, new Wallpaper("default"));
         }
     }
 
