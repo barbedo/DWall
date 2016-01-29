@@ -16,7 +16,6 @@
 
 package com.barbedo.dwall.activities;
 
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,31 +25,28 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.barbedo.dwall.R;
+import com.barbedo.dwall.utils.SpinnerArrayAdapter;
 import com.barbedo.dwall.data.DWallApplication;
 import com.barbedo.dwall.data.Wallpaper;
 import com.barbedo.dwall.data.WallpaperData;
 import com.barbedo.dwall.fragments.TimePickerFragment;
 import com.barbedo.dwall.fragments.WifiFragment;
 import com.barbedo.dwall.services.TimeService;
-import com.barbedo.dwall.services.WifiService;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -117,7 +113,9 @@ public class EditActivity extends AppCompatActivity
 
         // Populates spinner
         spinner = (Spinner) findViewById(R.id.mode_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.spinner_text, R.layout.spinner_item);
+        SpinnerArrayAdapter<CharSequence> adapter = SpinnerArrayAdapter.createFromResource(this,
                 R.array.spinner_text, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
