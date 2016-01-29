@@ -97,6 +97,7 @@ public class ListActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (!Arrays.asList(fileList()).contains("default")) {
+                    // TODO: Launch the DefaultActivity
                     Snackbar.make(view, "Please, set a default wallpaper.",
                             Snackbar.LENGTH_LONG).show();
                 } else if (wallpaperList.size() >= 5) {

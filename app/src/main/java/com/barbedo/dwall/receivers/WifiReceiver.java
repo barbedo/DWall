@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -51,15 +52,20 @@ public class WifiReceiver extends BroadcastReceiver {
             ConnectivityManager connectivityManager =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            Log.d(TAG, "NetworkInfo null: " + String.valueOf(connectivityManager.getActiveNetworkInfo() == null));
+            Log.d(TAG, "NetworkInfo null: " + String.valueOf(connectivityManager.
+                    getActiveNetworkInfo() == null));
 
             if (connectivityManager.getActiveNetworkInfo() != null) {
-                if (connectivityManager.getActiveNetworkInfo().isConnected() ||
-                        connectivityManager.getActiveNetworkInfo().isFailover()) {
-                    Log.d(TAG, "isConnected");
-                    Intent intent = new Intent(context, WifiService.class);
-                    context.startService(intent);
+                if (connectivityManager.getActiveNetworkInfo().getType() ==
+                        ConnectivityManager.TYPE_WIFI) {
+                    if (connectivityManager.getActiveNetworkInfo().isConnected() ||
+                            connectivityManager.getActiveNetworkInfo().isFailover()) {
+                        Log.d(TAG, "isConnected");
+                        Intent intent = new Intent(context, WifiService.class);
+                        context.startService(intent);
+                    }
                 }
+
             }
         }
 
